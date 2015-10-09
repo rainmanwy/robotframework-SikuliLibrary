@@ -117,7 +117,24 @@ class SikuliLibrary(object):
     def _connect_remote_library(self):
         remoteUrl = 'http://127.0.0.1:%s' % str(self.port)
         remote = Remote(remoteUrl)
+        self._test_get_keyword_names(remote)
         return remote
+    
+    def _test_get_keyword_names(self, remote):
+        currentTime = startedTime = time.time()
+        started = False
+        while((currentTime-startedTime)<self.timeout):
+            try:
+                remote.get_keyword_names()
+            except Exception, err:
+                self.logger.warn("Test get_keyword_names failed! %s" % err.message)
+                currentTime = time.time()
+                time.sleep(1.0)
+                continue
+            started = True
+            break
+        if not started:
+            raise RuntimeError('Failed to get_keyword_names!')
 
     def get_keyword_names(self):
         return self.remote.get_keyword_names()
