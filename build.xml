@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="GBK"?>
+<project name="SikuliLibrary" basedir="." default="build">
+	<property name="src" value="src"/>
+	<property name="class" value="class"/>
+	<property name="dist" value="dist"/>
+	<property name="lib" value="lib"/>
+	<!--property name="conf" value="conf"/-->
+
+	<path id="classpath">
+		<pathelement path="${class}"/>
+		<fileset dir="${lib}" includes="*.jar"/>
+	</path>
+	<target name="help" description="help info">
+		<echo>help:print help info</echo>
+		<echo>compile:compile whole project</echo>
+		<echo>build:jar package</echo>
+		<echo>clean:clean internal target</echo>
+	</target>
+	<target name="init">
+		<echo>clean staff and prepare for later compile</echo>
+		<delete dir="${dist}" />
+		<!--delete file="META-INF/MANIFEST.MF" /-->
+		<delete dir="${class}"/>
+		<!--delete dir="$dist}/${conf}"/-->
+		<mkdir dir="${class}"/>
+		<mkdir dir="${dist}"/>
+        <mkdir dir="${dist}/SikuliLibrary"/>
+        <mkdir dir="${dist}/SikuliLibrary/lib"/>
+		<!--mkdir dir="${lib}"/-->
+		<!--mkdir dir="${dist}/${conf}"/-->
+	</target>
+	<target name="unzip" depends="init">
+		<echo>unzip necessary reference class file</echo>
+		<mkdir dir="${class}"/>
+		<unzip dest="${class}">
+			<fileset dir="${lib}">
+				<include name="**/*.jar"/>
+			</fileset>
+		</unzip>
+		<delete dir="${class}/META-INF" />
+	</target>
+	<target name="compile" depends="unzip">
+		<echo>compile java project</echo>
+		<javac destdir="${class}" >
+			<src path="${src}"/>
+			<!--<compilerarg value= "-Xlint:unchecked "/>-->
+			<classpath refid="classpath"/>
+		</javac>
+	</target>
+	<target name="build" description="package" depends="compile">
+		<echo> package jar for RobotJava</echo>
+		<copy file="src/java/META-INF/MANIFEST.MF" todir="META-INF"/>
+		<!--copy file="${conf}/log4j.properties" todir="${dist}/${conf}"/-->
+		<jar destfile="${dist}/SikuliLibrary/lib/SikuliLibrary.jar" manifest="META-INF/MANIFEST.MF" >
+			<fileset dir="${class}"/>
+			<fileset dir="${src}"/>
+			<!--fileset dir="${lib}"/-->
+			<!--fileset dir="${conf}"/-->
+		</jar>
+        <copy file="src/python/__init__.py" todir="${dist}/SikuliLibrary"/>
+		<copy file="src/python/sikuli.py" todir="${dist}/SikuliLibrary"/>
+		<delete file="META-INF/MANIFEST.MF" />
+
+	</target>
+
+	<target name="clean" description="clean">
+		<delete dir="${class}"/>
+		<delete dir="${dist}"/>
+	</target>
+</project>
