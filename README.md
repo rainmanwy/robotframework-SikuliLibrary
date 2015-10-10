@@ -15,20 +15,30 @@ Overview
 
 Difference With Other Similiar Sikuli Libraries
 ------------------------------
-* Do not plan to expose sikuli api to Robot Framework directly. All sikuli apis are encapsulated. One benefit is easier to user.
- Example 1: wait functionality is added for each operations
- ```
-     public void click(String image) throws Exception{
-         wait(image, Double.toString(this.timeout));
-         try {
-             screen.click(image);
+* Do not plan to expose sikuli api to Robot Framework directly. All sikuli apis are encapsulated. One benefit is easy to use
+  * Wait functionality is added for each operations
+     ```java
+         public void click(String image) throws Exception{
+             wait(image, Double.toString(this.timeout));
+             try {
+                 screen.click(image);
+             }
+             catch (FindFailed e) {
+                 capture();
+                 throw new ScreenOperationException("Click "+image+" failed"+e.getMessage(), e);
+             }
          }
-         catch (FindFailed e) {
-             capture();
-             throw new ScreenOperationException("Click "+image+" failed"+e.getMessage(), e);
-         }
-     }
- ```
+     ```
+  * Keyword to handel similiar images problem, could check "click_in" test suite in demo folder to get details
+    ```java
+        public void clickIn(String areaImage, String targetImage) throws Exception {
+                wait(areaImage, Double.toString(this.timeout));
+                Match match = screen.find(areaImage);
+                System.out.println(areaImage + " is found!");
+                match.click(targetImage);
+                capture(match.find(targetImage));
+            }
+    ```
 
 Installation
 ------------------------------
