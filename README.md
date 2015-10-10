@@ -1,20 +1,17 @@
 Sikuli Robot Framework Library
 ==============================
 
-Introduction
-------------------------------
+## Introduction
 Sikuli Robot Framework Library provide keywords to test UI through [Sikuli](http://www.sikuli.org/).
 
-Overview
-------------------------------
+## Overview
 ![](https://github.com/rainmanwy/robotframework-SikuliLibrary/blob/master/docs/img/architecture.png "architecture")
 * This library is implemented with [Robot Framework Remote Library](https://code.google.com/p/robotframework/wiki/RemoteLibrary)
 * Sikuli api is encapsulated as Robot keywords, and explored to clients with [jrobotremoteserver](https://github.com/ombre42/jrobotremoteserver)
 * Client is implemented with python and use Robot remote library to communicate with server side
 * Users could implement their own clients with different languages which support xml rpc
 
-Difference With Other Similiar Sikuli Libraries
-------------------------------
+## Differences With Other Similiar Sikuli Libraries
 * Do not plan to expose sikuli api to Robot Framework directly. All sikuli apis are encapsulated. One benefit is easy to use
   * Wait functionality is added for each operations
   ```java
@@ -40,8 +37,7 @@ Difference With Other Similiar Sikuli Libraries
      }
 ```
 
-Installation
-------------------------------
+## Installation
 If want to build yourself, Please follow below steps
 * Install ant tool
 * Install Sikuli API for your target Operating System, replace sikulixapi.jar in lib folder(api for Windows is include in source, if target OS is Windows, COULD ignore this step)
@@ -49,10 +45,8 @@ If want to build yourself, Please follow below steps
 * If no error, "dist" folder will be created. Add "dist" folder to PYTHONPATH environment variable
 * Enter "demo" folder, and executing robot case "testsuite_sikuli_demo.txt" should be passed
 
-Example
-------------------------------
-
-
+## Example
+### Hello World Example
 ```
 *** Settings ***
 Documentation     Sikuli Library Demo
@@ -89,4 +83,36 @@ Input In Notepad
 Quit Without Save
     Click    close.png
     Click    dont_save.png
+```
+### Click In Example
+```
+*** Settings ***
+Documentation     Sikuli Library Click In Example
+Test Setup        Add Needed Image Path
+Test Teardown     Stop Remote Server
+Library           SikuliLibrary
+Library           OperatingSystem
+
+*** Variables ***
+${IMAGE_DIR}      ${CURDIR}\\img
+
+*** Test Cases ***
+Click In Example
+    Open Example UI
+    Click Right OK Button
+    Click Left OK Button
+
+*** Keywords ***
+Add Needed Image Path
+    Add Image Path    ${IMAGE_DIR}
+
+Open Example UI
+    Run         chrome ${CURDIR}\\html\\click_in_demo.html
+
+Click Right OK Button
+    Click In        right_area.png      target.png
+
+Click Left OK Button
+    Click In        left_area.png      target.png
+
 ```
