@@ -7,7 +7,7 @@ Sikuli Robot Framework Library provide keywords to test UI through [Sikuli](http
 
 Overview
 ------------------------------
-![](https://raw.github.com/rainmanwy/temp/master/doc/img/architecture.png "architecture")
+![](https://raw.github.com/rainmanwy/temp/master/docs/img/architecture.png "architecture")
 
 Installation
 ------------------------------
