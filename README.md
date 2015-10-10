@@ -7,7 +7,28 @@ Sikuli Robot Framework Library provide keywords to test UI through [Sikuli](http
 
 Overview
 ------------------------------
-![](https://raw.github.com/rainmanwy/temp/master/docs/img/architecture.png "architecture")
+![](https://github.com/rainmanwy/robotframework-SikuliLibrary/blob/master/docs/img/architecture.png "architecture")
+* This library is implemented with [Robot Framework Remote Library](https://code.google.com/p/robotframework/wiki/RemoteLibrary)
+* Sikuli api is encapsulated as Robot keywords, and explored to clients with [jrobotremoteserver](https://github.com/ombre42/jrobotremoteserver)
+* Client is implemented with python and use Robot remote library to communicate with server side
+* Users could implement their own clients with different languages which support xml rpc
+
+Difference With Other Similiar Sikuli Libraries
+------------------------------
+* Do not plan to expose sikuli api to Robot Framework directly. All sikuli apis are encapsulated. One benefit is easier to user.
+ Example 1: wait functionality is added for each operations
+ ```
+     public void click(String image) throws Exception{
+         wait(image, Double.toString(this.timeout));
+         try {
+             screen.click(image);
+         }
+         catch (FindFailed e) {
+             capture();
+             throw new ScreenOperationException("Click "+image+" failed"+e.getMessage(), e);
+         }
+     }
+ ```
 
 Installation
 ------------------------------
