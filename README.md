@@ -5,6 +5,10 @@ Introduction
 ------------------------------
 Sikuli Robot Framework Library provide keywords to test UI through [Sikuli](http://www.sikuli.org/).
 
+Overview
+------------------------------
+![](https://raw.github.com/rainmanwy/temp/master/doc/img/architecture.png "architecture")
+
 Installation
 ------------------------------
 If want to build yourself, Please follow below steps
