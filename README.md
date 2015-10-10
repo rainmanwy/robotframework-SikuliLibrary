@@ -44,13 +44,15 @@ Installation
 ------------------------------
 If want to build yourself, Please follow below steps
 * Install ant tool
+* Install Sikuli API for your target Operating System, replace sikulixapi.jar in lib folder(api for Windows is include in source, if target OS is Windows, COULD ignore this step)
 * Clone this project, and execute ant command to build the project
-* Install Sikuli API for your target Operating System, replace sikulixapi.jar in lib folder
 * If no error, "dist" folder will be created. Add "dist" folder to PYTHONPATH environment variable
 * Enter "demo" folder, and executing robot case "testsuite_sikuli_demo.txt" should be passed
 
 Example
 ------------------------------
+
+
 ```
 *** Settings ***
 Documentation     Sikuli Library Demo
