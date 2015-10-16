@@ -84,17 +84,24 @@ public class ScreenKeywords {
         }
     }
 
-    @RobotKeyword("Wait image shown")
-    @ArgumentNames({"image", "timeout"})
-    public void wait(String image, String timeout) throws TimeoutException {
+//    @RobotKeyword("Wait image shown")
+//    @ArgumentNames({"image", "timeout"})
+    private Match wait(String image, String timeout) throws TimeoutException {
         try {
             Match match = screen.wait(image, Double.parseDouble(timeout));
             capture(match);
+            return match;
         }
         catch(FindFailed e) {
             capture();
             throw new TimeoutException("Timeout happend, could not find "+image, e);
         }
+    }
+
+    @RobotKeyword("Wait until image shown in screen")
+    @ArgumentNames({"image", "timeout"})
+    public void waitUntilScreenContain(String image, String timeout) throws TimeoutException {
+        wait(image, timeout);
     }
 
     @RobotKeyword("Input text")
@@ -103,16 +110,37 @@ public class ScreenKeywords {
         System.out.println("Input Text:");
         System.out.println(text);
         this.click(image);
-        screen.type(text);
+        int result = screen.type(text);
+        if (result == 0) {
+            throw new ScreenOperationException("Input text failed");
+        }
+        Key
     }
 
     @RobotKeyword("Click in. \nClick target image in area image.")
     @ArgumentNames({"areaImage", "targetImage"})
     public void clickIn(String areaImage, String targetImage) throws Exception {
-        wait(areaImage, Double.toString(this.timeout));
-        Match match = screen.find(areaImage);
+        Match match = wait(areaImage, Double.toString(this.timeout));
         System.out.println(areaImage + " is found!");
         match.click(targetImage);
+        capture(match.find(targetImage));
+    }
+
+    @RobotKeyword("Double click in. \nDouble click target image in area image.")
+    @ArgumentNames({"areaImage", "targetImage"})
+    public void doubleClickIn(String areaImage, String targetImage) throws Exception {
+        Match match = wait(areaImage, Double.toString(this.timeout));
+        System.out.println(areaImage + " is found!");
+        match.doubleClick(targetImage);
+        capture(match.find(targetImage));
+    }
+
+    @RobotKeyword("Right click in. \nRight click target image in area image.")
+    @ArgumentNames({"areaImage", "targetImage"})
+    public void rightClickIn(String areaImage, String targetImage) throws Exception {
+        Match match = wait(areaImage, Double.toString(this.timeout));
+        System.out.println(areaImage + " is found!");
+        match.rightClick(targetImage);
         capture(match.find(targetImage));
     }
 
@@ -122,7 +150,7 @@ public class ScreenKeywords {
         System.out.println("*DEBUG* Saved path: "+imagePath);
         File file = new File(imagePath);
         String fileName = file.getName();
-        System.out.println("*HTML* <img src='"+CaptureFolder.getInstance().getSubFolder()+"/"+fileName+"'/>");
+        System.out.println("*HTML* <img src='" + CaptureFolder.getInstance().getSubFolder() + "/" + fileName + "'/>");
     }
 
     private void capture(Region region) {
@@ -131,7 +159,7 @@ public class ScreenKeywords {
         System.out.println("*DEBUG* Saved path: "+imagePath);
         File file = new File(imagePath);
         String fileName = file.getName();
-        System.out.println("*HTML* <img src='"+CaptureFolder.getInstance().getSubFolder()+"/"+fileName+"'/>");
+        System.out.println("*HTML* <img src='" + CaptureFolder.getInstance().getSubFolder() + "/" + fileName + "'/>");
     }
 
     @RobotKeyword("Capture whole screen")
@@ -139,4 +167,5 @@ public class ScreenKeywords {
     public void captureScreen(){
         capture();
     }
+
 }

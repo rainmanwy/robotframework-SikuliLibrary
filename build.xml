@@ -59,7 +59,7 @@
 		</jar>
         <copy file="src/python/__init__.py" todir="${dist}/SikuliLibrary"/>
 		<copy file="src/python/sikuli.py" todir="${dist}/SikuliLibrary"/>
-		<delete file="META-INF/MANIFEST.MF" />
+		<delete dir="META-INF" />
 
 	</target>
 
