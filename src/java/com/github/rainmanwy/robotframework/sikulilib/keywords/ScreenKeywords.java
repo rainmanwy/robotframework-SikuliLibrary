@@ -114,7 +114,6 @@ public class ScreenKeywords {
         if (result == 0) {
             throw new ScreenOperationException("Input text failed");
         }
-        Key
     }
 
     @RobotKeyword("Click in. \nClick target image in area image.")

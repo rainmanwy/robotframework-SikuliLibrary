@@ -8,7 +8,7 @@ Library           SikuliLibrary
 ${IMAGE_DIR}      ${CURDIR}\\img
 
 *** Test Cases ***
-Windows Notpad Hellow World
+Windows Notepad Hello World
     Open Windows Start Menu
     Open Notepad
     Input In Notepad
