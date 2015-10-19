@@ -98,10 +98,39 @@ public class ScreenKeywords {
         }
     }
 
+    private Match find(String image) {
+        try {
+            Match match = screen.find(image);
+            capture(match);
+            return match;
+        } catch (FindFailed e) {
+            System.out.println("Could not find " + image);
+            return null;
+        }
+    }
+
     @RobotKeyword("Wait until image shown in screen")
     @ArgumentNames({"image", "timeout"})
     public void waitUntilScreenContain(String image, String timeout) throws TimeoutException {
         wait(image, timeout);
+    }
+
+    @RobotKeyword("Screen should contain image")
+    @ArgumentNames({"image"})
+    public void screenShouldContain(String image) throws ScreenOperationException {
+        Match match = find(image);
+        if (match == null) {
+            throw new ScreenOperationException("Screen should contain "+image);
+        }
+    }
+
+    @RobotKeyword("Screen should not contain image")
+    @ArgumentNames({"image"})
+    public void screenShouldNotContain(String image) throws ScreenOperationException {
+        Match match = find(image);
+        if (match != null) {
+            throw new ScreenOperationException("Screen should not contain "+image);
+        }
     }
 
     @RobotKeyword("Input text")
