@@ -133,12 +133,14 @@ public class ScreenKeywords {
         }
     }
 
-    @RobotKeyword("Input text")
+    @RobotKeyword("Input text. Image could be empty")
     @ArgumentNames({"image", "text"})
     public void inputText(String image, String text) throws Exception {
         System.out.println("Input Text:");
         System.out.println(text);
-        this.click(image);
+        if ( !"".equals(image) ) {
+            this.click(image);
+        }
         int result = screen.type(text);
         if (result == 0) {
             throw new ScreenOperationException("Input text failed");

@@ -28,7 +28,8 @@ Open Notepad
     Double Click    notepad_title.png
 
 Input In Notepad
-    Input Text    notepad_workspace.png    Hello World
+    Click           notepad_workspace.png
+    Input Text    ${EMPTY}    Hello World
 
 Quit Without Save
     Click    close.png
