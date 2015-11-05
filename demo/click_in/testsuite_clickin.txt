@@ -20,6 +20,7 @@ Add Needed Image Path
 
 Open Example UI
     Run         chrome ${CURDIR}\\html\\click_in_demo.html
+    Wait Until Screen Contain         right_area.png        10
 
 Click Right OK Button
     Click In        right_area.png      target.png
