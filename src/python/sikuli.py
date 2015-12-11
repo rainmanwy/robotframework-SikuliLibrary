@@ -16,11 +16,13 @@ from xmlrpclib import ProtocolError
 from robot.libraries.Process import Process
 from robot.libraries.Remote import Remote
 from robot.libraries.BuiltIn import BuiltIn
+from .version import VERSION
 
 
 class SikuliLibrary(object):
 
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
+    ROBOT_LIBRARY_VERSION = VERSION
 
     def __init__(self, port=0, timeout=3.0):
         """
