@@ -1,7 +1,7 @@
 '''
 Created on 2015-08-19
 
-@author: y136wang
+@author: wang_yang1980@hotmail.com
 '''
 
 import socket
