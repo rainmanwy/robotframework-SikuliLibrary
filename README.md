@@ -50,6 +50,7 @@ pip install robotframework-SikuliLibrary
 ### Build With Maven
 * Clone this project, and execute maven package command
 * One zip file will be created in "target" folder, could unzip this file and add to PYTHONPATH
+
 ### Build With Ant
 * Install Sikuli API for your target Operating System, replace sikulixapi.jar in lib folder(api for Windows is include in source, if target OS is Windows, COULD ignore this step)
 * Clone this project, and execute ant command to build the project
