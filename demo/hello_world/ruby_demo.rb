@@ -2,7 +2,7 @@ require "xmlrpc/client"
 require "pathname"
 
 client = XMLRPC::Client.new("127.0.0.1", "/", 10000)
-client.call("get_keyword_names")
+ret = client.call("get_keyword_names")
 client.call("run_keyword", "addImagePath", [Pathname.new(File.dirname(__FILE__)).realpath.to_s+"/img"])
 client.call("run_keyword", "click", ["windows_start_menu.png"])
 client.call("run_keyword", "waitUntilScreenContain", ["search_input.png", "5"])
