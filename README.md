@@ -38,6 +38,7 @@ Sikuli Robot Framework Library provide keywords to test UI through [Sikuli](http
      }
 ```
 * Operating images could be shown in robot logs, easy to troubleshooting
+![](https://github.com/rainmanwy/robotframework-SikuliLibrary/blob/master/docs/img/log.png "log")
 
 
 ## Installation
