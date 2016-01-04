@@ -1,6 +1,8 @@
 package com.github.rainmanwy.robotframework.sikulilib.keywords;
 
 import java.io.File;
+import java.util.Map;
+import java.util.HashMap;
 
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
@@ -22,6 +24,7 @@ public class ScreenKeywords {
     private static double DEFAULT_TIMEOUT = 3.0;
     private final Screen screen = new Screen();
     private double timeout;
+    private Map<String, Match> highlightMap = new HashMap<String, Match>();
 
     public ScreenKeywords() {
         timeout = DEFAULT_TIMEOUT;
@@ -197,5 +200,41 @@ public class ScreenKeywords {
     public void captureScreen(){
         capture();
     }
+
+    @RobotKeyword("Highlight matched image")
+    @ArgumentNames({"image"})
+    public void highlight(String image) throws Exception{
+        Match match = null;
+        if (highlightMap.containsKey(image)==false) {
+            match = screen.find(image);
+            highlightMap.put(image, match);
+            match.highlight();
+            capture();
+        } else {
+            System.out.println("*WARN* "+image+" was already highlighted");
+        }
+    }
+
+    @RobotKeyword("Clear highlight from screen")
+    @ArgumentNames({"image"})
+    public void clearHighlight(String image) {
+        if (highlightMap.containsKey(image)) {
+            Match match = highlightMap.get(image);
+            match.highlight();
+            highlightMap.remove(image);
+        } else {
+            System.out.println("*WARN* " + image + " was not highlighted before");
+        }
+    }
+
+    @RobotKeyword("Clear all highlights from screen")
+    @ArgumentNames({})
+    public void clearAllHighlights() {
+        for(Match match : highlightMap.values()) {
+            match.highlight();
+        }
+        highlightMap.clear();
+    }
+
 
 }

@@ -11,6 +11,7 @@ import os
 import glob
 import time
 import urllib
+import threading
 
 from xmlrpclib import ProtocolError
 from robot.libraries.Process import Process
@@ -24,11 +25,15 @@ class SikuliLibrary(object):
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
     ROBOT_LIBRARY_VERSION = VERSION
 
-    def __init__(self, port=0, timeout=3.0):
+    def __init__(self, port=0, timeout=3.0, mode=''):
         """
         @port: sikuli java process socket port
         @timeout: Timeout of waiting java process started
+        @mode: if set as 'DOC',  
         """
+        print port
+        print timeout
+        print mode
         self.logger = self._init_logger()
         self.timeout = float(timeout)
         if int(port) == 0:
@@ -36,6 +41,8 @@ class SikuliLibrary(object):
         self.port = port
         self._start_sikuli_java_process()
         self.remote = self._connect_remote_library()
+        if mode.upper().strip() == 'DOC':
+            self._stop_thread(4)
 
     def _init_logger(self):
         robotLogLevels = {'TRACE': logging.DEBUG/2,
@@ -150,4 +157,11 @@ class SikuliLibrary(object):
     def run_keyword(self, name, arguments=[], kwargs={}):
         return self.remote.run_keyword(name, arguments, kwargs)
 
-
+    def _stop_thread(self, timeout):    
+        def stop():
+            time.sleep(float(timeout))
+            self.run_keyword('stop_remote_server')
+        
+        thread = threading.Thread(target=stop, args=())
+        thread.start()
+    
