@@ -4,6 +4,9 @@ Sikuli Robot Framework Library
 ## Introduction
 Sikuli Robot Framework Library provide keywords to test UI through [Sikuli](http://www.sikuli.org/).
 
+## Keyword Documentation
+[Keywords](http://rainmanwy.github.io/robotframework-SikuliLibrary/doc/SikuliLibrary.html)
+
 ## Overview
 ![](https://github.com/rainmanwy/robotframework-SikuliLibrary/blob/master/docs/img/architecture.png "architecture")
 * This library is implemented with [Robot Framework Remote Library](https://code.google.com/p/robotframework/wiki/RemoteLibrary)
