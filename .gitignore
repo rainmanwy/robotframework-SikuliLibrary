@@ -1,4 +1,5 @@
 *.idea
 class
 dist
+target
 *.iml

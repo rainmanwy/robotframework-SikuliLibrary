@@ -89,7 +89,7 @@ class SikuliLibrary(object):
         self.logger.info('Sikuli java process is started')
 
     def _wait_process_started(self):
-        url = "http://127.0.0.1:%s" % str(self.port)
+        url = "http://127.0.0.1:%s/" % str(self.port)
         currentTime = startedTime = time.time()
         started = False
         while((currentTime-startedTime)<self.timeout):
@@ -124,7 +124,7 @@ class SikuliLibrary(object):
         return outputDir
 
     def _connect_remote_library(self):
-        remoteUrl = 'http://127.0.0.1:%s' % str(self.port)
+        remoteUrl = 'http://127.0.0.1:%s/' % str(self.port)
         remote = Remote(remoteUrl)
         self._test_get_keyword_names(remote)
         return remote
