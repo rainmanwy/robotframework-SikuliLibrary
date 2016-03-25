@@ -6,7 +6,7 @@ Library           SikuliLibrary
 Library           OperatingSystem
 
 *** Variables ***
-${IMAGE_DIR}      ${CURDIR}\\img
+${IMAGE_DIR}      ${CURDIR}/img
 
 *** Test Cases ***
 Click In Example
@@ -19,7 +19,7 @@ Add Needed Image Path
     Add Image Path    ${IMAGE_DIR}
 
 Open Example UI
-    Run         chrome ${CURDIR}\\html\\click_in_demo.html
+    Run         firefox ${CURDIR}/html/click_in_demo.html
     Wait Until Screen Contain         right_area.png        10
 
 Click Right OK Button

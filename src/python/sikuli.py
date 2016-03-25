@@ -29,11 +29,9 @@ class SikuliLibrary(object):
         """
         @port: sikuli java process socket port
         @timeout: Timeout of waiting java process started
-        @mode: if set as 'DOC',  
+        @mode: if set as 'DOC',  will stop java process automatically, 
+               if set as 'PYTHON', means library is running in out of robot environment
         """
-        print port
-        print timeout
-        print mode
         self.logger = self._init_logger()
         self.timeout = float(timeout)
         if int(port) == 0:
@@ -43,6 +41,17 @@ class SikuliLibrary(object):
         self.remote = self._connect_remote_library()
         if mode.upper().strip() == 'DOC':
             self._stop_thread(4)
+        elif mode.upper().strip() == 'PYTHON':
+            pass
+        else:
+            self._check_robot_running()
+    
+    def _check_robot_running(self):
+        try:
+            BuiltIn().get_variable_value('${SUITE SOURCE}')
+        except Exception, err:
+            self.logger.warn('Robot may not running, stop java process: %s' % err.message)
+            self._stop_thread(1)
 
     def _init_logger(self):
         robotLogLevels = {'TRACE': logging.DEBUG/2,

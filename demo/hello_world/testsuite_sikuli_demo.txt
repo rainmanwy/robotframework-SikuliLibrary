@@ -23,12 +23,12 @@ Open Windows Start Menu
 
 Open Notepad
     Input Text    search_input.png    notepad
-    Sleep       1s
+    Sleep    1s
     Click    notepad.png
     Double Click    notepad_title.png
 
 Input In Notepad
-    Click           notepad_workspace.png
+    Click    notepad_workspace.png
     Input Text    ${EMPTY}    Hello World
 
 Quit Without Save
