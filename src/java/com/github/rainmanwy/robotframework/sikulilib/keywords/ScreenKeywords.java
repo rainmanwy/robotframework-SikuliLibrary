@@ -150,6 +150,20 @@ public class ScreenKeywords {
         }
     }
 
+    @RobotKeyword("Paste text. Image could be empty")
+    @ArgumentNames({"image", "text"})
+    public void pasteText(String image, String text) throws Exception {
+        System.out.println("Paste Text:");
+        System.out.println(text);
+        if ( !"".equals(image) ) {
+            this.click(image);
+        }
+        int result = screen.paste(text);
+        if (result == 0) {
+            throw new ScreenOperationException("Paste text failed");
+        }
+    }
+
     @RobotKeyword("Click in. \nClick target image in area image.")
     @ArgumentNames({"areaImage", "targetImage"})
     public void clickIn(String areaImage, String targetImage) throws Exception {
