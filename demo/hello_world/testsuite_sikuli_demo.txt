@@ -1,0 +1,36 @@
+*** Settings ***
+Documentation     Sikuli Library Demo
+Test Setup        Add Needed Image Path
+Test Teardown     Stop Remote Server
+Library           SikuliLibrary
+
+*** Variables ***
+${IMAGE_DIR}      ${CURDIR}\\img
+
+*** Test Cases ***
+Windows Notepad Hello World
+    Open Windows Start Menu
+    Open Notepad
+    Input In Notepad
+    Quit Without Save
+
+*** Keywords ***
+Add Needed Image Path
+    Add Image Path    ${IMAGE_DIR}
+
+Open Windows Start Menu
+    Click    windows_start_menu.png
+
+Open Notepad
+    Input Text    search_input.png    notepad
+    Sleep    1s
+    Click    notepad.png
+    Double Click    notepad_title.png
+
+Input In Notepad
+    Click    notepad_workspace.png
+    Input Text    ${EMPTY}    Hello World
+
+Quit Without Save
+    Click    close.png
+    Click    dont_save.png

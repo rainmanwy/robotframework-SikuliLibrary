@@ -1,0 +1,29 @@
+*** Settings ***
+Documentation     Sikuli Library Click In Example
+Test Setup        Add Needed Image Path
+Test Teardown     Stop Remote Server
+Library           SikuliLibrary
+Library           OperatingSystem
+
+*** Variables ***
+${IMAGE_DIR}      ${CURDIR}/img
+
+*** Test Cases ***
+Click In Example
+    Open Example UI
+    Click Right OK Button
+    Click Left OK Button
+
+*** Keywords ***
+Add Needed Image Path
+    Add Image Path    ${IMAGE_DIR}
+
+Open Example UI
+    Run         firefox ${CURDIR}/html/click_in_demo.html
+    Wait Until Screen Contain         right_area.png        10
+
+Click Right OK Button
+    Click In        right_area.png      target.png
+
+Click Left OK Button
+    Click In        left_area.png      target.png

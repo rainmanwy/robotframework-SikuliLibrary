@@ -1,0 +1,168 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+	<groupId>com.github.rainmanwy.robotframework</groupId>
+	<artifactId>robotframework-SikuliLibrary</artifactId>
+	<version>1.0</version>
+	<packaging>jar</packaging>
+	<name>robotframework-SikuliLibrary</name>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+    <repositories>
+		<repository>
+      <!-- OSSRH: com.sikulix -->
+			<name>com.sikulix</name>
+			<id>com.sikulix</id>
+			<url>https://oss.sonatype.org/content/groups/public</url>
+			<!--layout>default</layout-->
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+		</repository>
+        <repository>
+      <!-- OSSRH: com.sikulix -->
+			<name>jxgrabkey</name>
+			<id>jxgrabkey</id>
+			<url>https://labs.consol.de/maven/repository/</url>
+			<!--layout>default</layout-->
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+		</repository>
+	</repositories>
+    
+    
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.sikulix</groupId>
+			<artifactId>sikulixapi</artifactId>
+			<version>1.1.0</version>
+		</dependency>
+        <!--dependency>
+            <groupId>org.robotframework</groupId>
+            <artifactId>javalib-core</artifactId>
+            <version>1.2.1</version>
+        </dependency-->
+        <dependency>
+            <groupId>com.github.ombre42</groupId>
+            <artifactId>jrobotremoteserver</artifactId>
+            <version>3.0</version>
+        </dependency>
+
+
+	</dependencies>
+
+	<build>
+        <sourceDirectory>src/java</sourceDirectory>
+		<plugins>
+
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+
+			<!--plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>com.github.rainmanwy.robotframework.sikulilib.SikuliLibrary</mainClass>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>dependency-jars/</classpathPrefix>
+						</manifest>
+					</archive>
+					<finalName>SikuliLibrary</finalName>
+				</configuration>
+			</plugin-->
+			
+			
+            <!--plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.5.1</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeScope>runtime</includeScope>
+                            <outputDirectory>${project.build.directory}/dependency-jars/
+                            </outputDirectory>
+
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin-->
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<!--descriptor>package.xml</descriptor-->
+					<finalName>SikuliLibrary</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<archive>
+						<manifest>
+							<mainClass>com.github.rainmanwy.robotframework.sikulilib.SikuliLibrary</mainClass>
+							<addClasspath>true</addClasspath>
+						</manifest>
+					</archive>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+                    <execution>
+						<id>dist</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>assembly.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+	</build>
+</project>
