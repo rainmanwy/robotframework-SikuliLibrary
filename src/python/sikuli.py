@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+#!/usr/bin/python
+#coding=utf-8
 '''
 Created on 2015-08-19
 
@@ -90,9 +93,9 @@ class SikuliLibrary(object):
         if len(jarList) != 1:
             raise Exception('Sikuli jar package should be exist in lib folder')
         sikuliJar = jarList[0]
-        command = 'java -jar '+sikuliJar+' %s ' % str(self.port)+self._get_output_folder()
+        command = 'java -jar '+sikuliJar+' %s ' % str(self.port)
         process = Process()
-        process.start_process(command, shell=True, stdout=self._output_file(), stderr=self._err_file())
+        process.start_process(command, shell=True)
         self.logger.info('Start sikuli java process on port %s' % str(self.port))
         self._wait_process_started()
         self.logger.info('Sikuli java process is started')
@@ -112,25 +115,6 @@ class SikuliLibrary(object):
             break
         if not started:
             raise RuntimeError('Start sikuli java process failed!')
-
-
-    def _output_file(self):
-        outputDir = self._get_output_folder()
-        outputFile = 'Sikuli_java_stdout_'+str(time.time())+'.txt'
-        return outputFile
-
-    def _err_file(self):
-        outputDir = self._get_output_folder()
-        errFile = 'Sikuli_java_stderr_'+str(time.time())+'.txt'
-        return errFile
-
-    def _get_output_folder(self):
-        outputDir = os.path.abspath(os.curdir)
-        try:
-            outputDir = BuiltIn().get_variable_value('${OUTPUTDIR}')
-        except Exception, err:
-            pass
-        return outputDir
 
     def _connect_remote_library(self):
         remoteUrl = 'http://127.0.0.1:%s/' % str(self.port)
