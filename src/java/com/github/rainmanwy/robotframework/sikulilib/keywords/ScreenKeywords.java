@@ -4,9 +4,7 @@ import java.io.File;
 import java.util.Map;
 import java.util.HashMap;
 
-import org.robotframework.javalib.annotation.ArgumentNames;
-import org.robotframework.javalib.annotation.RobotKeyword;
-import org.robotframework.javalib.annotation.RobotKeywords;
+import org.robotframework.javalib.annotation.*;
 
 import com.github.rainmanwy.robotframework.sikulilib.exceptions.TimeoutException;
 import com.github.rainmanwy.robotframework.sikulilib.exceptions.ScreenOperationException;
@@ -48,47 +46,8 @@ public class ScreenKeywords {
     @ArgumentNames({"path"})
     public void setCaptureFolder(String path) {
         CaptureFolder.getInstance().setCaptureFolder(path);
-    }
+    }   
 
-    @RobotKeyword("Click image")
-    @ArgumentNames({"image"})
-    public void click(String image) throws Exception{
-        wait(image, Double.toString(this.timeout));
-        try {
-            screen.click(image);
-        }
-        catch (FindFailed e) {
-            capture();
-            throw new ScreenOperationException("Click "+image+" failed"+e.getMessage(), e);
-        }
-    }
-
-    @RobotKeyword("Double click image")
-    @ArgumentNames({"image"})
-    public void doubleClick(String image) throws Exception{
-        wait(image, Double.toString(this.timeout));
-        try {
-            screen.doubleClick(image);
-        }
-        catch (FindFailed e) {
-            throw new ScreenOperationException("Click "+image+" failed"+e.getMessage(), e);
-        }
-    }
-
-    @RobotKeyword("Right click image")
-    @ArgumentNames({"image"})
-    public void rightClick(String image) throws Exception{
-        wait(image, Double.toString(this.timeout));
-        try {
-            screen.rightClick(image);
-        }
-        catch (FindFailed e) {
-            throw new ScreenOperationException("Click "+image+" failed"+e.getMessage(), e);
-        }
-    }
-
-//    @RobotKeyword("Wait image shown")
-//    @ArgumentNames({"image", "timeout"})
     private Match wait(String image, String timeout) throws TimeoutException {
         try {
             Match match = screen.wait(image, Double.parseDouble(timeout));
@@ -137,59 +96,111 @@ public class ScreenKeywords {
     }
 
     @RobotKeyword("Input text. Image could be empty")
-    @ArgumentNames({"image", "text"})
-    public void inputText(String image, String text) throws Exception {
+    @ArgumentNames({"text","image="})
+    public void inputText(String text, String image) throws Exception {
+        System.out.println("Input Text:");
+        System.out.println(text);        
+        this.click(image);    
+        int result = screen.type(text);
+        if (result == 0) {
+            throw new ScreenOperationException("Input text failed");
+        }
+    }
+    
+    @RobotKeywordOverload
+    public void inputText(String text) throws Exception {
         System.out.println("Input Text:");
         System.out.println(text);
-        if ( !"".equals(image) ) {
-            this.click(image);
-        }
         int result = screen.type(text);
         if (result == 0) {
             throw new ScreenOperationException("Input text failed");
         }
     }
 
-    @RobotKeyword("Paste text. Image could be empty")
-    @ArgumentNames({"image", "text"})
-    public void pasteText(String image, String text) throws Exception {
+    @RobotKeyword("Paste text.Text could be Chinese Characters.Image could be empty.")
+    @ArgumentNames({"text","image="})
+    public void pasteText(String text, String image) throws Exception {
         System.out.println("Paste Text:");
         System.out.println(text);
-        if ( !"".equals(image) ) {
-            this.click(image);
-        }
+        this.click(image);
         int result = screen.paste(text);
         if (result == 0) {
             throw new ScreenOperationException("Paste text failed");
         }
     }
 
-    @RobotKeyword("Click in. \nClick target image in area image.")
-    @ArgumentNames({"areaImage", "targetImage"})
-    public void clickIn(String areaImage, String targetImage) throws Exception {
-        Match match = wait(areaImage, Double.toString(this.timeout));
-        System.out.println(areaImage + " is found!");
+    @RobotKeywordOverload
+    public void pasteText(String text) throws Exception {
+        System.out.println("Paste Text:");
+        System.out.println(text);
+        int result = screen.paste(text);
+        if (result == 0) {
+            throw new ScreenOperationException("Paste text failed");
+        }
+    }
+    
+    @RobotKeyword("Click image.if there is one image,click it; if there are two,click second image in first image.Second image can be null.")
+    @ArgumentNames({"image","targetImage="})
+    public void click(String image) throws Exception{
+        wait(image, Double.toString(this.timeout));
+        try {
+            screen.click(image);
+        }
+        catch (FindFailed e) {
+            capture();
+            throw new ScreenOperationException("Click "+image+" failed"+e.getMessage(), e);
+        }
+    }
+
+    @RobotKeywordOverload
+    public void click(String image, String targetImage) throws Exception {
+        Match match = wait(image, Double.toString(this.timeout));
+        System.out.println(image + " is found!");
         match.click(targetImage);
         capture(match.find(targetImage));
     }
 
-    @RobotKeyword("Double click in. \nDouble click target image in area image.")
-    @ArgumentNames({"areaImage", "targetImage"})
-    public void doubleClickIn(String areaImage, String targetImage) throws Exception {
-        Match match = wait(areaImage, Double.toString(this.timeout));
-        System.out.println(areaImage + " is found!");
+
+    @RobotKeyword("Double click image.if there is one image,click it; if there are two,click second image in first image.Second image can be null.")
+    @ArgumentNames({"image","targetImage="})
+    public void doubleClick(String image) throws Exception{
+        wait(image, Double.toString(this.timeout));
+        try {
+            screen.doubleClick(image);
+        }
+        catch (FindFailed e) {
+            throw new ScreenOperationException("Double click "+image+" failed"+e.getMessage(), e);
+        }
+    }
+
+    @RobotKeywordOverload
+    public void doubleClick(String image, String targetImage) throws Exception {
+        Match match = wait(image, Double.toString(this.timeout));
+        System.out.println(image + " is found!");
         match.doubleClick(targetImage);
         capture(match.find(targetImage));
     }
+    
+    @RobotKeyword("Right click image.if there is one image,click it; if there are two,click second image in first image.Second image can be null.")
+    @ArgumentNames({"image","targetImage="})
+    public void rightClick(String image) throws Exception{
+        wait(image, Double.toString(this.timeout));
+        try {
+            screen.rightClick(image);
+        }
+        catch (FindFailed e) {
+            throw new ScreenOperationException("Right click "+image+" failed"+e.getMessage(), e);
+        }
+    }
 
-    @RobotKeyword("Right click in. \nRight click target image in area image.")
-    @ArgumentNames({"areaImage", "targetImage"})
-    public void rightClickIn(String areaImage, String targetImage) throws Exception {
-        Match match = wait(areaImage, Double.toString(this.timeout));
-        System.out.println(areaImage + " is found!");
+    @RobotKeywordOverload
+    public void rightClick(String image, String targetImage) throws Exception {
+        Match match = wait(image, Double.toString(this.timeout));
+        System.out.println(image + " is found!");
         match.rightClick(targetImage);
         capture(match.find(targetImage));
     }
+
 
     private void capture() {
         ScreenImage image = screen.capture();
@@ -249,6 +260,8 @@ public class ScreenKeywords {
         }
         highlightMap.clear();
     }
+
+    
 
 
 }
