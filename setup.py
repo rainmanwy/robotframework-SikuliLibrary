@@ -9,6 +9,7 @@ from distutils.core import setup
 from os.path import abspath, dirname, join
 execfile(join(dirname(abspath(__file__)), 'target', 'src', 'SikuliLibrary', 'version.py'))
 
+import os
 
 DESCRIPTION = """
 Sikuli Robot Framework Library provide keywords for Robot Framework to test UI through Sikuli.
@@ -23,6 +24,12 @@ Programming Language :: Python
 Programming Language :: Java
 Topic :: Software Development :: Testing
 """[1:-1]
+
+compile_cmd ='mvn package'
+print('*************************** '+compile_cmd+' ***************************') 
+os.system(compile_cmd)
+
+print("*************************** setup.py install ***************************")
 
 setup(name         = 'robotframework-SikuliLibrary',
       version      = VERSION,
