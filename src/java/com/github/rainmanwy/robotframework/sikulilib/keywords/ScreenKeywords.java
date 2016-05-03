@@ -118,6 +118,16 @@ public class ScreenKeywords {
         wait(image, timeout);
     }
 
+    @RobotKeyword("Wait until image not in screen")
+    @ArgumentNames({"image", "timeout"})
+    public void waitUntilScreenNotContain(String image, String timeout) throws TimeoutException {
+        boolean result = screen.waitVanish(image, Double.parseDouble(timeout));
+        capture();
+        if (result==false) {
+            throw new TimeoutException(image+" is still in screen");
+        }
+    }
+
     @RobotKeyword("Screen should contain image")
     @ArgumentNames({"image"})
     public void screenShouldContain(String image) throws ScreenOperationException {
@@ -249,6 +259,26 @@ public class ScreenKeywords {
         }
         highlightMap.clear();
     }
+
+    @RobotKeyword("Drag the source image to target image.\nIf source image is empty, drag the last match and drop at given target")
+    @ArgumentNames({"srcImage", "targetImage"})
+    public void dragAndDrop(String srcImage, String targetImage) throws Exception {
+        int result = 0;
+        if ( "".equals(srcImage) ) {
+            result = screen.dragDrop(targetImage);
+            wait(targetImage, Double.toString(this.timeout));
+        } else {
+            Match srcMatch = wait(srcImage, Double.toString(this.timeout));
+            Match targetMatch = wait(targetImage, Double.toString(this.timeout));
+            result = screen.dragDrop(srcMatch, targetMatch);
+        }
+        if (result==0) {
+            capture();
+            throw new ScreenOperationException("Failed to drag "+srcImage+" to " +targetImage);
+        }
+    }
+
+
 
 
 }
