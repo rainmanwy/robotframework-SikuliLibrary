@@ -142,6 +142,7 @@ public class ScreenKeywords {
     @RobotKeyword("Screen should not contain image")
     @ArgumentNames({"image"})
     public void screenShouldNotContain(String image) throws ScreenOperationException {
+        capture();
         Match match = find(image);
         if (match != null) {
             throw new ScreenOperationException("Screen should not contain "+image);
