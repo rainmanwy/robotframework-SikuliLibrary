@@ -3,6 +3,7 @@ package com.github.rainmanwy.robotframework.sikulilib.keywords;
 import java.io.File;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Set;
 
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
@@ -133,6 +134,7 @@ public class ScreenKeywords {
     public void screenShouldContain(String image) throws ScreenOperationException {
         Match match = find(image);
         if (match == null) {
+            capture();
             throw new ScreenOperationException("Screen should contain "+image);
         }
     }
