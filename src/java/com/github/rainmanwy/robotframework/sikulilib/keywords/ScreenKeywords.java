@@ -142,11 +142,11 @@ public class ScreenKeywords {
     @RobotKeyword("Screen should not contain image")
     @ArgumentNames({"image"})
     public void screenShouldNotContain(String image) throws ScreenOperationException {
-        capture();
         Match match = find(image);
         if (match != null) {
             throw new ScreenOperationException("Screen should not contain "+image);
         }
+        capture(); 
     }
 
     @RobotKeyword("Input text. Image could be empty")
@@ -280,8 +280,17 @@ public class ScreenKeywords {
             throw new ScreenOperationException("Failed to drag "+srcImage+" to " +targetImage);
         }
     }
-
-
-
-
+    @RobotKeyword( "Tries to find the image on the screen, returns accuracy score (0-1)" 
+                + "\n Example Usage:"
+                + "\n | ${score} = | Get Match Score |  somethingThatMayExist.png |"
+                + "\n | Run Keyword if | ${score} > 0.95 | keyword1 | ELSE | keyword2 |")
+    @ArgumentNames({"image"})
+    public Double getMatchScore(String image) throws ScreenOperationException {
+        Match match = find(image);
+        if (match == null) {
+            return 0.0;
+        }else{
+            return match.getScore();
+        }
+    }
 }
