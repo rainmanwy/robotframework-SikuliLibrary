@@ -12,7 +12,7 @@ import org.sikuli.basics.Settings;
 @RobotKeywords
 public class SettingsKeywords {
 
-    @RobotKeyword("Set Sikuli minSimilarity(seconds)")
+    @RobotKeyword("Set Sikuli minSimilarity(0-1)")
     @ArgumentNames({"minSimilarity"})
     public String setMinSimilarity(String minSimilarity) {
         double prevMinSimilarity = Settings.MinSimilarity;
