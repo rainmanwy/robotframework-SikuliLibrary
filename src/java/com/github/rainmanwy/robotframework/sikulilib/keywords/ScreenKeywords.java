@@ -293,4 +293,20 @@ public class ScreenKeywords {
             return match.getScore();
         }
     }
+    @RobotKeyword( "Presses a special keyboard key." 
+                + "\n\n For a list of possible Keys view docs for org.sikuli.script.Key ."
+                + "\n\n Example Usage:"
+                + "\n | Double Click | textFieldWithDefaultText.png | "
+                + "\n | Press Special Key | DELETE | ")
+    @ArgumentNames({"keyConstant"})
+    public void pressSpecialKey(String specialCharName) throws ScreenOperationException{
+        try{
+            Object key =  Key.class.getField(specialCharName).get(null);
+            screen.type(key.toString());
+        }
+        catch(ReflectiveOperationException e){
+            throw new ScreenOperationException("No " +specialCharName.toString() + " in class org.sikuli.script.Key ");
+        }
+    }
+    
 }
