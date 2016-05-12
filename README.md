@@ -54,9 +54,22 @@ pip install robotframework-SikuliLibrary
 ### Build With Maven
 * Clone this project, and execute maven package command
 * One zip file will be created in "target" folder, could unzip this file and add to PYTHONPATH
+* If want to installed to python, please execute
+```
+python setup.py install
+```
 
 ###Note
 * For Linux, there are some dependencies need be installed, please check [sikuli quick start](http://www.sikulix.com/quickstart.html) to get more details.
+
+## Start Server Manually
+SikuliLibrary contains a standalone jar file which could be started in command line. Sometimes user want to do test on different OS. The steps are:
+* Find SikuliLibrary.jar in "SikuliLibrary/lib" folder and upload to target OS.
+* Start jar with command
+```
+java -jar SikuliLibrary.jar  <port>  <captured_imagine_folder>
+```
+* User could use different clients to connect to server and call keywords. For example [Remote Library](https://github.com/robotframework/RemoteInterface) in robot framework.
 
 ## Example
 ### Hello World Example
@@ -143,4 +156,16 @@ Click Right OK Button
 Click Left OK Button
     Click In        left_area.png      target.png
 
+```
+
+### Start Server
+```
+java -jar SikuliLibrary.jar 10000 .
+
+0 [main] INFO org.robotframework.remoteserver.RemoteServer  - Mapped path / to library com.github.rainmanwy.robotframework.sikulilib.SikuliLibrary.
+1 [main] INFO org.robotframework.remoteserver.RemoteServer  - Robot Framework remote server starting
+1 [main] INFO org.eclipse.jetty.server.Server  - jetty-7.x.y-SNAPSHOT
+28 [main] INFO org.eclipse.jetty.server.handler.ContextHandler  - started o.e.j.s.ServletContextHandler{/,null}
+129 [main] INFO org.eclipse.jetty.server.AbstractConnector  - Started SelectChannelConnector@0.0.0.0:10000
+129 [main] INFO org.robotframework.remoteserver.RemoteServer  - Robot Framework remote server started on port 10000.
 ```

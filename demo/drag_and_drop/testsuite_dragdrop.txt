@@ -1,0 +1,28 @@
+*** Settings ***
+Documentation     Sikuli Library Demo
+Suite Setup        Add Needed Image Path
+Suite Teardown     Stop Remote Server
+Library           SikuliLibrary
+
+*** Variables ***
+${IMAGE_DIR}      ${CURDIR}\\img
+
+*** Test Cases ***
+Demo1
+    Drag File To Folder
+    
+Demo2
+    Drag File To Folder With Empty Source
+
+*** Keywords ***
+Add Needed Image Path
+    Add Image Path    ${IMAGE_DIR}
+
+Drag File To Folder
+    Drag And Drop    src1.png    target.png
+    Wait Until Screen Not Contain    src1.png    10
+    
+Drag File To Folder With Empty Source
+    Screen Should Contain    src2.png
+    Drag And Drop    ${EMPTY}    target.png
+    Wait Until Screen Not Contain    src2.png    10

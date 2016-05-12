@@ -3,6 +3,7 @@ package com.github.rainmanwy.robotframework.sikulilib.keywords;
 import java.io.File;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Set;
 
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
@@ -118,11 +119,22 @@ public class ScreenKeywords {
         wait(image, timeout);
     }
 
+    @RobotKeyword("Wait until image not in screen")
+    @ArgumentNames({"image", "timeout"})
+    public void waitUntilScreenNotContain(String image, String timeout) throws TimeoutException {
+        boolean result = screen.waitVanish(image, Double.parseDouble(timeout));
+        capture();
+        if (result==false) {
+            throw new TimeoutException(image+" is still in screen");
+        }
+    }
+
     @RobotKeyword("Screen should contain image")
     @ArgumentNames({"image"})
     public void screenShouldContain(String image) throws ScreenOperationException {
         Match match = find(image);
         if (match == null) {
+            capture();
             throw new ScreenOperationException("Screen should contain "+image);
         }
     }
@@ -134,6 +146,7 @@ public class ScreenKeywords {
         if (match != null) {
             throw new ScreenOperationException("Screen should not contain "+image);
         }
+        capture(); 
     }
 
     @RobotKeyword("Input text. Image could be empty")
@@ -250,5 +263,50 @@ public class ScreenKeywords {
         highlightMap.clear();
     }
 
-
+    @RobotKeyword("Drag the source image to target image.\nIf source image is empty, drag the last match and drop at given target")
+    @ArgumentNames({"srcImage", "targetImage"})
+    public void dragAndDrop(String srcImage, String targetImage) throws Exception {
+        int result = 0;
+        if ( "".equals(srcImage) ) {
+            result = screen.dragDrop(targetImage);
+            wait(targetImage, Double.toString(this.timeout));
+        } else {
+            Match srcMatch = wait(srcImage, Double.toString(this.timeout));
+            Match targetMatch = wait(targetImage, Double.toString(this.timeout));
+            result = screen.dragDrop(srcMatch, targetMatch);
+        }
+        if (result==0) {
+            capture();
+            throw new ScreenOperationException("Failed to drag "+srcImage+" to " +targetImage);
+        }
+    }
+    @RobotKeyword( "Tries to find the image on the screen, returns accuracy score (0-1)" 
+                + "\n Example Usage:"
+                + "\n | ${score} = | Get Match Score |  somethingThatMayExist.png |"
+                + "\n | Run Keyword if | ${score} > 0.95 | keyword1 | ELSE | keyword2 |")
+    @ArgumentNames({"image"})
+    public Double getMatchScore(String image) throws ScreenOperationException {
+        Match match = find(image);
+        if (match == null) {
+            return 0.0;
+        }else{
+            return match.getScore();
+        }
+    }
+    @RobotKeyword( "Presses a special keyboard key." 
+                + "\n\n For a list of possible Keys view docs for org.sikuli.script.Key ."
+                + "\n\n Example Usage:"
+                + "\n | Double Click | textFieldWithDefaultText.png | "
+                + "\n | Press Special Key | DELETE | ")
+    @ArgumentNames({"keyConstant"})
+    public void pressSpecialKey(String specialCharName) throws ScreenOperationException{
+        try{
+            Object key =  Key.class.getField(specialCharName).get(null);
+            screen.type(key.toString());
+        }
+        catch(ReflectiveOperationException e){
+            throw new ScreenOperationException("No " +specialCharName.toString() + " in class org.sikuli.script.Key ");
+        }
+    }
+    
 }
