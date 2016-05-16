@@ -8,6 +8,7 @@ import java.util.Set;
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
 import org.robotframework.javalib.annotation.RobotKeywords;
+import org.robotframework.javalib.annotation.RobotKeywordOverload;
 
 import com.github.rainmanwy.robotframework.sikulilib.exceptions.TimeoutException;
 import com.github.rainmanwy.robotframework.sikulilib.exceptions.ScreenOperationException;
@@ -144,9 +145,9 @@ public class ScreenKeywords {
     public void screenShouldNotContain(String image) throws ScreenOperationException {
         Match match = find(image);
         if (match != null) {
+            capture();
             throw new ScreenOperationException("Screen should not contain "+image);
         }
-        capture(); 
     }
 
     @RobotKeyword("Input text. Image could be empty")
@@ -293,6 +294,7 @@ public class ScreenKeywords {
             return match.getScore();
         }
     }
+
     @RobotKeyword( "Presses a special keyboard key." 
                 + "\n\n For a list of possible Keys view docs for org.sikuli.script.Key ."
                 + "\n\n Example Usage:"
@@ -308,5 +310,109 @@ public class ScreenKeywords {
             throw new ScreenOperationException("No " +specialCharName.toString() + " in class org.sikuli.script.Key ");
         }
     }
-    
+
+    @RobotKeyword("Move the mouse pointer to the target"
+                + "\n\n @image: if image is empty, will move mouse to the last matched."
+                + "\n\n Example Usage:"
+                + "\n | Mouse Move              | test.png | "
+                + "\n | Screen Should Contain   | test.png | "
+                + "\n | Mouse Move |")
+    @ArgumentNames({"image"})
+    public void mouseMove(String image) throws Exception{
+        Match match = wait(image, Double.toString(this.timeout));
+        int result = match.mouseMove(image);
+        if (result == 0) {
+            throw new ScreenOperationException("Failed to move mouse to "+image);
+        }
+    }
+
+    @RobotKeywordOverload
+    public void mouseMove() throws Exception{
+        int result = screen.mouseMove();
+        if (result==0) {
+            throw new ScreenOperationException("Failed to move mouse to last matched image");
+        }
+    }
+
+    @RobotKeyword("Press and hold the specified buttons"
+            + "\n\n @mouseButtons: Could be LEFT, MIDDLE, RIGHT"
+            + "\n\n Example Usage:"
+            + "\n | Mouse Move   | test.png | "
+            + "\n | Mouse Down   | LEFT     | RIGHT |"
+            + "\n | Mouse Up     |")
+    @ArgumentNames({"**mouseButtons"})
+    public void mouseDown(String[] mouseButtons) throws Exception{
+        String currentButton = "";
+        try{
+            int sum = 0;
+            for (String button : mouseButtons) {
+                currentButton = button;
+                int buttonValue =  (Integer) Button.class.getField(button).get(null);
+                sum = sum + buttonValue;
+            }
+            screen.mouseDown(sum);
+        }
+        catch(ReflectiveOperationException e){
+            throw new ScreenOperationException("No " +currentButton + " in class org.sikuli.script.Button ");
+        }
+    }
+
+    @RobotKeyword("release the specified mouse buttons"
+            + "\n\n @mouseButtons: Could be LEFT, MIDDLE, RIGHT. If empty, all currently held buttons are released"
+            + "\n\n Example Usage:"
+            + "\n | Mouse Move   | test.png | "
+            + "\n | Mouse Down   | LEFT     | RIGHT |"
+            + "\n | Mouse Up     | LEFT     | RIGHT |")
+    @ArgumentNames({"**mouseButtons"})
+    public void mouseUp(String[] mouseButtons) throws Exception{
+        String currentButton = "";
+        try{
+            int sum = 0;
+            for (String button : mouseButtons) {
+                currentButton = button;
+                int buttonValue =  (Integer) Button.class.getField(button).get(null);
+                sum = sum + buttonValue;
+            }
+            screen.mouseUp(sum);
+        }
+        catch(ReflectiveOperationException e){
+            throw new ScreenOperationException("No " +currentButton + " in class org.sikuli.script.Button ");
+        }
+    }
+
+    @RobotKeywordOverload
+    public void mouseUp() throws Exception{
+        screen.mouseUp();
+    }
+
+    @RobotKeyword("Move mouse to the target, and wheel up with give steps"
+            + "\n\n Example Usage:"
+            + "\n | Wheel Up     | 5   | "
+            + "\n | Wheel Up     | 5   |  test.png   |")
+    @ArgumentNames({"steps", "image="})
+    public void wheelUp(int steps, String image) throws Exception{
+        wait(image, Double.toString(this.timeout));
+        screen.wheel(image, Button.WHEEL_UP, steps);
+    }
+
+    @RobotKeywordOverload
+    public void wheelUp(int steps) throws Exception{
+        screen.wheel(Button.WHEEL_UP, steps);
+    }
+
+    @RobotKeyword("Move mouse to the target, and wheel down with give steps"
+            + "\n\n Example Usage:"
+            + "\n | Wheel Down     | 5   | "
+            + "\n | Wheel Down     | 5   |  test.png   |")
+    @ArgumentNames({"steps", "image="})
+    public void wheelDown(int steps, String image) throws Exception{
+        wait(image, Double.toString(this.timeout));
+        screen.wheel(image, Button.WHEEL_DOWN, steps);
+    }
+
+    @RobotKeywordOverload
+    public void wheelDown(int steps) throws Exception{
+        screen.wheel(Button.WHEEL_DOWN, steps);
+    }
+
 }
