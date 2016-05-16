@@ -70,6 +70,9 @@ SikuliLibrary contains a standalone jar file which could be started in command l
 java -jar SikuliLibrary.jar  <port>  <captured_imagine_folder>
 ```
 * User could use different clients to connect to server and call keywords. For example [Remote Library](https://github.com/robotframework/RemoteInterface) in robot framework.
+```
+Library        Remote        http://<ip>:<port>/
+```
 
 ## Example
 ### Hello World Example
