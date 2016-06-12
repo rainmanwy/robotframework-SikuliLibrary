@@ -7,7 +7,8 @@ Author: by wang_yang1980@hotmail.com
 from distutils.core import setup
 
 from os.path import abspath, dirname, join
-execfile(join(dirname(abspath(__file__)), 'target', 'src', 'SikuliLibrary', 'version.py'))
+with open(join(dirname(abspath(__file__)), 'target', 'src', 'SikuliLibrary', 'version.py')) as f:
+    exec(f.read())
 
 
 DESCRIPTION = """
