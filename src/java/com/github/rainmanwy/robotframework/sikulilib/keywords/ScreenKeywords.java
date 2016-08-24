@@ -340,7 +340,7 @@ public class ScreenKeywords {
             + "\n | Mouse Move   | test.png | "
             + "\n | Mouse Down   | LEFT     | RIGHT |"
             + "\n | Mouse Up     |")
-    @ArgumentNames({"**mouseButtons"})
+    @ArgumentNames({"*mouseButtons"})
     public void mouseDown(String[] mouseButtons) throws Exception{
         String currentButton = "";
         try{
@@ -363,7 +363,7 @@ public class ScreenKeywords {
             + "\n | Mouse Move   | test.png | "
             + "\n | Mouse Down   | LEFT     | RIGHT |"
             + "\n | Mouse Up     | LEFT     | RIGHT |")
-    @ArgumentNames({"**mouseButtons"})
+    @ArgumentNames({"*mouseButtons"})
     public void mouseUp(String[] mouseButtons) throws Exception{
         String currentButton = "";
         try{
