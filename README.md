@@ -60,7 +60,7 @@ python setup.py install
 ```
 
 ###Note
-* For Linux, there are some dependencies need be installed, please check [sikuli quick start](http://www.sikulix.com/quickstart.html) to get more details.
+* For Linux, there are some dependencies need be installed, please check [sikuli quick start](http://www.sikulix.com/specials/files/linux-setup-prerequisites.html) to get more details.
 
 ## Start Server Manually
 SikuliLibrary contains a standalone jar file which could be started in command line. Sometimes user want to do test on different OS. The steps are:
@@ -171,5 +171,4 @@ java -jar SikuliLibrary.jar 10000 .
 28 [main] INFO org.eclipse.jetty.server.handler.ContextHandler  - started o.e.j.s.ServletContextHandler{/,null}
 129 [main] INFO org.eclipse.jetty.server.AbstractConnector  - Started SelectChannelConnector@0.0.0.0:10000
 129 [main] INFO org.robotframework.remoteserver.RemoteServer  - Robot Framework remote server started on port 10000.
-
 ```
