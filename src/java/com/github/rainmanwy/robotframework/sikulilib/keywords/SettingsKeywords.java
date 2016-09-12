@@ -20,4 +20,10 @@ public class SettingsKeywords {
         return Double.toString(prevMinSimilarity);
     }
 
+    @RobotKeyword("Set Sikuli OCR text read(true/false)")
+    @ArgumentNames({"ocrTextRead"})
+    public void setOcrTextRead(boolean ocrTextRead) {
+        Settings.OcrTextRead = ocrTextRead;
+    }
+
 }

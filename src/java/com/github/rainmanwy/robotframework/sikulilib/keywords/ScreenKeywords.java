@@ -1,9 +1,12 @@
 package com.github.rainmanwy.robotframework.sikulilib.keywords;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.nio.Buffer;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
@@ -14,6 +17,7 @@ import com.github.rainmanwy.robotframework.sikulilib.exceptions.TimeoutException
 import com.github.rainmanwy.robotframework.sikulilib.exceptions.ScreenOperationException;
 import com.github.rainmanwy.robotframework.sikulilib.utils.CaptureFolder;
 
+import org.sikuli.basics.Settings;
 import org.sikuli.script.*;
 
 /**
@@ -413,6 +417,30 @@ public class ScreenKeywords {
     @RobotKeywordOverload
     public void wheelDown(int steps) throws Exception{
         screen.wheel(Button.WHEEL_DOWN, steps);
+    }
+
+    @RobotKeyword("Get text"
+            + "\n\n If image is not given, keyword will get text from whole Screen"
+            + "\n If image is given, keyword will get text from matched region"
+            + "\n Call keyword setOcrTextRead to set OcrTextRead as true, before using text recognition keywords"
+            + "\n\n Example Usage:"
+            + "\n | Set Ocr Text Read  | true       |"
+            + "\n | Get Text           |"
+            + "\n | Get Text           | test.png   |")
+    @ArgumentNames({"image="})
+    public String getText() throws Exception {
+        return screen.text();
+
+    }
+
+    @RobotKeywordOverload
+    public String getText(String image) throws Exception {
+        Match match = find(image);
+        if (match == null) {
+            throw new ScreenOperationException("Could not find " + image);
+        }
+        Image matchImage = match.getImage();
+        return matchImage.text();
     }
 
 }
