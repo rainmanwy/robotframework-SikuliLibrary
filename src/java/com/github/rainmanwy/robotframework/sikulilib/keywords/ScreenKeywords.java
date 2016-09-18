@@ -1,12 +1,8 @@
 package com.github.rainmanwy.robotframework.sikulilib.keywords;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.nio.Buffer;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Set;
-import java.util.concurrent.ExecutionException;
 
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
@@ -17,7 +13,6 @@ import com.github.rainmanwy.robotframework.sikulilib.exceptions.TimeoutException
 import com.github.rainmanwy.robotframework.sikulilib.exceptions.ScreenOperationException;
 import com.github.rainmanwy.robotframework.sikulilib.utils.CaptureFolder;
 
-import org.sikuli.basics.Settings;
 import org.sikuli.script.*;
 
 /**
