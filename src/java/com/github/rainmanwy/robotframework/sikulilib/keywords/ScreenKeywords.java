@@ -182,8 +182,8 @@ public class ScreenKeywords {
     public void clickIn(String areaImage, String targetImage) throws Exception {
         Match match = wait(areaImage, Double.toString(this.timeout));
         System.out.println(areaImage + " is found!");
-        match.click(targetImage);
         capture(match.find(targetImage));
+        match.click(targetImage);
     }
 
     @RobotKeyword("Double click in. \nDouble click target image in area image.")
@@ -191,8 +191,8 @@ public class ScreenKeywords {
     public void doubleClickIn(String areaImage, String targetImage) throws Exception {
         Match match = wait(areaImage, Double.toString(this.timeout));
         System.out.println(areaImage + " is found!");
-        match.doubleClick(targetImage);
         capture(match.find(targetImage));
+        match.doubleClick(targetImage);
     }
 
     @RobotKeyword("Right click in. \nRight click target image in area image.")
@@ -200,8 +200,8 @@ public class ScreenKeywords {
     public void rightClickIn(String areaImage, String targetImage) throws Exception {
         Match match = wait(areaImage, Double.toString(this.timeout));
         System.out.println(areaImage + " is found!");
-        match.rightClick(targetImage);
         capture(match.find(targetImage));
+        match.rightClick(targetImage);
     }
 
     private void capture() {
