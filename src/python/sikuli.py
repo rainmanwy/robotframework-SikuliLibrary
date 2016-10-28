@@ -117,12 +117,12 @@ class SikuliLibrary(object):
     def _output_file(self):
         outputDir = self._get_output_folder()
         outputFile = 'Sikuli_java_stdout_'+str(time.time())+'.txt'
-        return outputFile
+        return os.path.join(outputDir, outputFile)
 
     def _err_file(self):
         outputDir = self._get_output_folder()
         errFile = 'Sikuli_java_stderr_'+str(time.time())+'.txt'
-        return errFile
+        return os.path.join(outputDir, errFile)
 
     def _get_output_folder(self):
         outputDir = os.path.abspath(os.curdir)
