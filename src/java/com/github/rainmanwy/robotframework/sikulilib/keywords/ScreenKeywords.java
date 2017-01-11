@@ -280,6 +280,32 @@ public class ScreenKeywords {
             throw new ScreenOperationException("Failed to drag "+srcImage+" to " +targetImage);
         }
     }
+
+    @RobotKeyword("Drag the source image to target by offset.\nIf source image is empty, drag the last match and drop at given target")
+    @ArgumentNames({"srcImage", "xOffset", "yOffset"})
+    public void dragAndDropByOffset(String srcImage, int xOffset, int yOffset) throws Exception {
+        int result = 0;
+        Match srcMatch;
+        if ( "".equals(srcImage) ) {
+            srcMatch = screen.getLastMatch();
+            if(srcMatch == null) {
+                throw new ScreenOperationException("Please input srcImage");
+            }
+        } else {
+            srcMatch = wait(srcImage, Double.toString(this.timeout));
+        }
+        int newX = srcMatch.getX() + xOffset;
+        int newY = srcMatch.getY() + yOffset;
+        Location newLocation = new Location(newX, newY);
+        result = screen.dragDrop(newLocation);
+        if (result==0) {
+            capture();
+            throw new ScreenOperationException("Failed to drag "+srcImage+" to " +newLocation);
+        }
+    }
+
+
+
     @RobotKeyword( "Tries to find the image on the screen, returns accuracy score (0-1)" 
                 + "\n Example Usage:"
                 + "\n | ${score} = | Get Match Score |  somethingThatMayExist.png |"
