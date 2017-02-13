@@ -1,6 +1,7 @@
 package com.github.rainmanwy.robotframework.sikulilib.keywords;
 
 import java.io.File;
+import java.util.Date;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -462,6 +463,31 @@ public class ScreenKeywords {
         }
         Image matchImage = match.getImage();
         return matchImage.text();
+    }
+
+    @RobotKeyword("Wait For Image"
+            + "\n\n Check wantedImage exist. If notWantedImage appear or timeout happened, throw exception"
+            + "\n @wantedImage: expected image in screen"
+            + "\n @notWantedImage: unexpected image in screen"
+            + "\n @timeout: wait sencods"
+            + "\n\n Example Usage:"
+            + "\n | Wait For Image  | wanted.png | notWanted.png | 5 |")
+    @ArgumentNames({"image="})
+    public void waitForImage(String wantedImage, String notWantedImage, int timeout) throws Exception {
+        Date begineTime = new Date();
+        while (System.currentTimeMillis() - begineTime.getTime() < timeout*1000) {
+            Match wantedMatch = screen.exists(wantedImage, 0);
+            Match notWantedMatch = screen.exists(notWantedImage, 0);
+            if (wantedMatch != null) {
+                return;
+            } else if ( notWantedMatch != null ) {
+                throw new ScreenOperationException(notWantedImage + " is founded! " + notWantedMatch);
+            } else {
+                Thread.sleep(500);
+            }
+        }
+        throw new TimeoutException("Could not find " + wantedImage);
+
     }
 
 }
