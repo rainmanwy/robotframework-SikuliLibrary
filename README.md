@@ -172,3 +172,9 @@ java -jar SikuliLibrary.jar 10000 .
 129 [main] INFO org.eclipse.jetty.server.AbstractConnector  - Started SelectChannelConnector@0.0.0.0:10000
 129 [main] INFO org.robotframework.remoteserver.RemoteServer  - Robot Framework remote server started on port 10000.
 ```
+
+### Disable Java Process Log File
+Could configure environment variable *DISABLE_SIKULI_LOG* to disable create log files
+```
+Linux: export DISABLE_SIKULI_LOG=ye
+```

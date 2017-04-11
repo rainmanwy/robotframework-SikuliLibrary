@@ -90,9 +90,13 @@ class SikuliLibrary(object):
         if len(jarList) != 1:
             raise Exception('Sikuli jar package should be exist in lib folder')
         sikuliJar = jarList[0]
-        command = 'java -jar '+sikuliJar+' %s %s' % (str(self.port), self._get_output_folder())
+        java = 'java'
+        arguments = ['-jar', sikuliJar, str(self.port), self._get_output_folder()]
         process = Process()
-        process.start_process(command, shell=True, stdout=self._output_file(), stderr=self._err_file())
+        if os.getenv("DISABLE_SIKULI_LOG"):
+            process.start_process(java, *arguments, shell=True)
+        else:
+            process.start_process(java, *arguments, shell=True, stdout=self._output_file(), stderr=self._err_file())
         self.logger.info('Start sikuli java process on port %s' % str(self.port))
         self._wait_process_started()
         self.logger.info('Sikuli java process is started')
