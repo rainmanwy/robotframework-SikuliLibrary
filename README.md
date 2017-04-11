@@ -176,5 +176,5 @@ java -jar SikuliLibrary.jar 10000 .
 ### Disable Java Process Log File
 Could configure environment variable *DISABLE_SIKULI_LOG* to disable create log files
 ```
-Linux: export DISABLE_SIKULI_LOG=ye
+Linux: export DISABLE_SIKULI_LOG=yes
 ```
