@@ -469,7 +469,7 @@ public class ScreenKeywords {
             + "\n\n Check wantedImage exist. If notWantedImage appear or timeout happened, throw exception"
             + "\n @wantedImage: expected image in screen"
             + "\n @notWantedImage: unexpected image in screen"
-            + "\n @timeout: wait sencods"
+            + "\n @timeout: wait seconds"
             + "\n\n Example Usage:"
             + "\n | Wait For Image  | wanted.png | notWanted.png | 5 |")
     @ArgumentNames({"image="})
@@ -488,6 +488,26 @@ public class ScreenKeywords {
         }
         throw new TimeoutException("Could not find " + wantedImage);
 
+    }
+
+    @RobotKeyword("Exists"
+            + "\n\n Check whether image exists in screen"
+            + "\n @image: expected image in screen"
+            + "\n @timeout: wait seconds"
+            + "\n\n Example Usage:"
+            + "\n | ${is_exist}  | Exists | image.png | 0 |")
+    @ArgumentNames({"image", "timeout="})
+    public Boolean exists(String image, int timeout) {
+        Match match = screen.exists(image, timeout);
+        if (match != null) {
+            return true;
+        }
+        return false;
+    }
+
+    @RobotKeywordOverload
+    public Boolean exists(String image) throws Exception{
+        return exists(image, 0);
     }
 
 }
