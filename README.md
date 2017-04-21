@@ -31,7 +31,7 @@ Sikuli Robot Framework Library provide keywords to test UI through [Sikulix](htt
      }
  ```
 * Keyword to handel similiar images issue, could check "click_in" test suite in demo folder to get details
-```java
+  ```java
      public void clickIn(String areaImage, String targetImage) throws Exception {
          wait(areaImage, Double.toString(this.timeout));
          Match match = screen.find(areaImage);
