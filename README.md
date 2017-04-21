@@ -19,17 +19,17 @@ Sikuli Robot Framework Library provide keywords to test UI through [Sikulix](htt
 * Do not plan to expose sikuli api to Robot Framework directly. All sikuli api are encapsulated as Keywords.
 * Wait functionality is added for each operations
   ```java
-     public void click(String image) throws Exception{
-         wait(image, Double.toString(this.timeout));
-         try {
-             screen.click(image);
-         }
-         catch (FindFailed e) {
-             capture();
-             throw new ScreenOperationException("Click "+image+" failed"+e.getMessage(), e);
-         }
-     }
- ```
+          public void click(String image) throws Exception{
+              wait(image, Double.toString(this.timeout));
+              try {
+                  screen.click(image);
+              }
+              catch (FindFailed e) {
+                  capture();
+                  throw new ScreenOperationException("Click "+image+" failed"+e.getMessage(), e);
+              }
+          }
+  ```
 * Keyword to handel similiar images issue, could check "click_in" test suite in demo folder to get details
   ```java
      public void clickIn(String areaImage, String targetImage) throws Exception {
