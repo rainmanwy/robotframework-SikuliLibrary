@@ -17,7 +17,7 @@ Sikuli Robot Framework Library provide keywords to test UI through [Sikulix](htt
 ## Differences With Other Similiar Sikuli Libraries
 * Robot Remote Library technology is used, different client part program languages are supported
 * Do not plan to expose sikuli api to Robot Framework directly. All sikuli api are encapsulated as Keywords.
-  * Wait functionality is added for each operations
+* Wait functionality is added for each operations
   ```java
      public void click(String image) throws Exception{
          wait(image, Double.toString(this.timeout));
@@ -30,7 +30,7 @@ Sikuli Robot Framework Library provide keywords to test UI through [Sikulix](htt
          }
      }
  ```
-  * Keyword to handel similiar images issue, could check "click_in" test suite in demo folder to get details
+* Keyword to handel similiar images issue, could check "click_in" test suite in demo folder to get details
 ```java
      public void clickIn(String areaImage, String targetImage) throws Exception {
          wait(areaImage, Double.toString(this.timeout));
@@ -46,11 +46,12 @@ Sikuli Robot Framework Library provide keywords to test UI through [Sikulix](htt
 
 ## Installation
 ### Pip installation
-*If target OS is Windows, could use pip to install directly
+* If target OS is Windows, could use pip to install directly
 ```
 pip install robotframework-SikuliLibrary
 ```
-*If target OS is Linux, please download linux version from [pypi](https://pypi.python.org/pypi/robotframework-SikuliLibrary)
+* If target OS is Linux, please download linux version from [pypi](https://pypi.python.org/pypi/robotframework-SikuliLibrary)
+* Note: pypi version is not latest version, if you want to use latest version, please check "Build With Maven"
 ### Build With Maven
 * Clone this project, and execute maven package command
 * One zip file will be created in "target" folder, could unzip this file and add to PYTHONPATH
@@ -59,7 +60,7 @@ pip install robotframework-SikuliLibrary
 python setup.py install
 ```
 
-###Note
+### Note
 * For Linux, there are some dependencies need be installed, please check [sikuli quick start](http://www.sikulix.com/specials/files/linux-setup-prerequisites.html) to get more details.
 
 ## Start Server Manually
