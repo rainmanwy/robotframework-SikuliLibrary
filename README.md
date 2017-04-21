@@ -39,7 +39,7 @@ Sikuli Robot Framework Library provide keywords to test UI through [Sikulix](htt
          match.click(targetImage);
          capture(match.find(targetImage));
      }
-```
+  ```
 * Operating images could be shown in robot logs, easy to troubleshooting
 ![](https://github.com/rainmanwy/robotframework-SikuliLibrary/blob/master/docs/img/log.png "log")
 
