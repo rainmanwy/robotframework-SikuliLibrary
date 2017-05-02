@@ -37,7 +37,22 @@ class SikuliLibrary(object):
         if int(port) == 0:
             port = self._get_free_tcp_port()
         self.port = port
-        self._start_sikuli_java_process()
+        start_retries = 0
+        started = False
+        while(start_retries < 5):
+            try:
+                self._start_sikuli_java_process()
+            except RuntimeError, err:
+                if(self.process):
+                    self.process.terminate_process()
+                self.port = self._get_free_tcp_port()
+                start_retries += 1
+                continue
+            started = True
+            break
+        if not started:
+            raise RuntimeError('Start sikuli java process failed!')
+            
         self.remote = self._connect_remote_library()
         if mode.upper().strip() == 'DOC':
             self._stop_thread(4)
@@ -92,11 +107,11 @@ class SikuliLibrary(object):
         sikuliJar = jarList[0]
         java = 'java'
         arguments = ['-jar', sikuliJar, str(self.port), self._get_output_folder()]
-        process = Process()
+        self.process = Process()
         if os.getenv("DISABLE_SIKULI_LOG"):
-            process.start_process(java, *arguments, shell=True)
+            self.process.start_process(java, *arguments, shell=True)
         else:
-            process.start_process(java, *arguments, shell=True, stdout=self._output_file(), stderr=self._err_file())
+            self.process.start_process(java, *arguments, shell=True, stdout=self._output_file(), stderr=self._err_file())
         self.logger.info('Start sikuli java process on port %s' % str(self.port))
         self._wait_process_started()
         self.logger.info('Sikuli java process is started')
