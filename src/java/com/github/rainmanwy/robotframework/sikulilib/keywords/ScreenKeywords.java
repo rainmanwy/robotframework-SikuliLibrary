@@ -46,6 +46,12 @@ public class ScreenKeywords {
         return ImagePath.add(path);
     }
 
+    @RobotKeyword("Remove image path")
+    @ArgumentNames({"path"})
+    public boolean removeImagePath(String path) {
+        return ImagePath.remove(path);
+    }
+
     @RobotKeyword("Set folder for captured images")
     @ArgumentNames({"path"})
     public void setCaptureFolder(String path) {
@@ -53,11 +59,26 @@ public class ScreenKeywords {
     }
 
     @RobotKeyword("Click image")
-    @ArgumentNames({"image"})
+    @ArgumentNames({"image", "xOffset=0", "yOffset=0"})
     public void click(String image) throws Exception{
         wait(image, Double.toString(this.timeout));
         try {
             screen.click(image);
+        }
+        catch (FindFailed e) {
+            capture();
+            throw new ScreenOperationException("Click "+image+" failed"+e.getMessage(), e);
+        }
+    }
+
+    @RobotKeywordOverload
+    public void click(String image, int xOffset, int yOffset) throws Exception{
+        Match match = wait(image, Double.toString(this.timeout));
+        try {
+            int newX = match.getX() + xOffset;
+            int newY = match.getY() + yOffset;
+            Location newLocation = new Location(newX, newY);
+            screen.click(newLocation);
         }
         catch (FindFailed e) {
             capture();
