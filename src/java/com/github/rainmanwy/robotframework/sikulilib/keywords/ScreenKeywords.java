@@ -185,6 +185,33 @@ public class ScreenKeywords {
         }
     }
 
+    @RobotKeyword("Type with modifiers" +
+            "\n Example:" +
+            "\n |Type With Modifiers| A| CTRL |")
+    @ArgumentNames({"text", "*modifiers"})
+    public void typeWithModifiers(String text, String[] modifiers) throws Exception {
+        System.out.println("Input Text:");
+        String keys = "";
+        for (String modifier : modifiers) {
+            keys = modifier + "+";
+        }
+        keys = keys + text;
+        System.out.println(keys);
+
+        int sum = 0;
+        for (String modifer : modifiers) {
+            try {
+                Object key = KeyModifier.class.getField(modifer).get(null);
+                sum = sum + (Integer) key;
+            } catch(ReflectiveOperationException e){
+                throw new ScreenOperationException("No " +modifer.toString() + " in class org.sikuli.script.Key ");
+            }
+        }
+
+        screen.type(text, sum);
+
+    }
+
     @RobotKeyword("Paste text. Image could be empty")
     @ArgumentNames({"image", "text"})
     public void pasteText(String image, String text) throws Exception {
@@ -364,7 +391,7 @@ public class ScreenKeywords {
                 + "\n | Mouse Move              | test.png | "
                 + "\n | Screen Should Contain   | test.png | "
                 + "\n | Mouse Move |")
-    @ArgumentNames({"image"})
+    @ArgumentNames({"image="})
     public void mouseMove(String image) throws Exception{
         Match match = wait(image, Double.toString(this.timeout));
         int result = match.mouseMove(image);
