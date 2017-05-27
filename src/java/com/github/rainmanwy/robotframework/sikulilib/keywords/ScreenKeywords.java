@@ -26,6 +26,7 @@ public class ScreenKeywords {
     private static double DEFAULT_TIMEOUT = 3.0;
     private final Screen screen = new Screen();
     private double timeout;
+    private Boolean isCaptureMatchedImage = true;
     private Map<String, Match> highlightMap = new HashMap<String, Match>();
 
     public ScreenKeywords() {
@@ -56,6 +57,14 @@ public class ScreenKeywords {
     @ArgumentNames({"path"})
     public void setCaptureFolder(String path) {
         CaptureFolder.getInstance().setCaptureFolder(path);
+    }
+
+    @RobotKeyword("Set capture matched images, the default value is true\n" +
+            "Example:\n" +
+            "| Set Capture Matched Image | false |")
+    @ArgumentNames({"value"})
+    public void setCaptureMatchedImage(boolean value) {
+        isCaptureMatchedImage = value;
     }
 
     @RobotKeyword("Click image")
@@ -263,12 +272,14 @@ public class ScreenKeywords {
     }
 
     private void capture(Region region) {
-        ScreenImage image = screen.capture(region);
-        String imagePath = image.save(CaptureFolder.getInstance().getCaptureFolder());
-        System.out.println("*DEBUG* Saved path: "+imagePath);
-        File file = new File(imagePath);
-        String fileName = file.getName();
-        System.out.println("*HTML* <img src='" + CaptureFolder.getInstance().getSubFolder() + "/" + fileName + "'/>");
+        if (isCaptureMatchedImage) {
+            ScreenImage image = screen.capture(region);
+            String imagePath = image.save(CaptureFolder.getInstance().getCaptureFolder());
+            System.out.println("*DEBUG* Saved path: "+imagePath);
+            File file = new File(imagePath);
+            String fileName = file.getName();
+            System.out.println("*HTML* <img src='" + CaptureFolder.getInstance().getSubFolder() + "/" + fileName + "'/>");
+        }
     }
 
     @RobotKeyword("Capture whole screen")
