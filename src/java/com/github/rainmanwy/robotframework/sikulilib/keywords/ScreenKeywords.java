@@ -87,7 +87,7 @@ public class ScreenKeywords {
     }
 
     @RobotKeyword("Double click image")
-    @ArgumentNames({"image"})
+    @ArgumentNames({"image", "xOffset=0", "yOffset=0"})
     public void doubleClick(String image) throws Exception{
         wait(image, Double.toString(this.timeout));
         try {
@@ -98,6 +98,22 @@ public class ScreenKeywords {
         }
     }
 
+//added by auyong    
+    @RobotKeywordOverload
+    public void doubleClick(String image, int xOffset, int yOffset) throws Exception{
+        Match match = wait(image, Double.toString(this.timeout));
+        try {
+            int newX = match.getX() + xOffset;
+            int newY = match.getY() + yOffset;
+            Location newLocation = new Location(newX, newY);
+            screen.doubleClick(newLocation);
+        }
+        catch (FindFailed e) {
+            capture();
+            throw new ScreenOperationException("Double Click "+image+" failed"+e.getMessage(), e);
+        }
+    }
+    
     @RobotKeyword("Right click image")
     @ArgumentNames({"image"})
     public void rightClick(String image) throws Exception{
