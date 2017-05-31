@@ -179,3 +179,20 @@ Could configure environment variable *DISABLE_SIKULI_LOG* to disable create log 
 ```
 Linux: export DISABLE_SIKULI_LOG=yes
 ```
+
+### Microsoft Management Console (MMC)
+In Windows environment, some applications are created using MMC. SikuliX is only able to interact with MMC if you launch as Administrator the Sikuli IDE or the test script using SikuliX library.
+
+If you start seeing errors like the below, you are running your tests against an MMC application as a non-admin:
+```
+[log] CLICK on L(1061,118)@S(0)[0,0 1920x1080]
+[error] RobotDesktop: checkMousePosition: should be L(1061,118)@S(0)[0,0 1920x1080]
+but after move is L(137,215)@S(0)[0,0 1920x1080]
+Possible cause in case you did not touch the mouse while script was running:
+ Mouse actions are blocked generally or by the frontmost application.
+You might try to run the SikuliX stuff as admin.
+```
+Another symptom is that your mouse will not move, and if it moves (there are random instances when the mouse moves), it will not click, so your test will fail. 
+
+Setting UAC to the lowest level (not to notify the user) will reduce the instances of MMC dialogs. This does not mean that UAC is turned off, just that it does not have any unnecessary popup when your tests are being run (or you will have to take care of them in your test scripts).
+
