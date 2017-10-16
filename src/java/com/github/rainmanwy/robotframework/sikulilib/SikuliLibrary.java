@@ -23,7 +23,9 @@ public class SikuliLibrary implements KeywordDocumentationRepository, RobotJavaL
         }
         RemoteServer.configureLogging();
         RemoteServer server = new RemoteServer();
-        server.addLibrary(SikuliLibrary.class, Integer.parseInt(args[0]));
+//        server.addLibrary(SikuliLibrary.class, Integer.parseInt(args[0]));
+        server.putLibrary("/", new SikuliLibrary());
+        server.setPort(Integer.parseInt(args[0]));
         server.start();
     }
 
