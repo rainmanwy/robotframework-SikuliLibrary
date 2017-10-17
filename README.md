@@ -17,21 +17,21 @@ Sikuli Robot Framework Library provide keywords to test UI through [Sikulix](htt
 ## Differences With Other Similiar Sikuli Libraries
 * Robot Remote Library technology is used, different client part program languages are supported
 * Do not plan to expose sikuli api to Robot Framework directly. All sikuli api are encapsulated as Keywords.
-  * Wait functionality is added for each operations
+* Wait functionality is added for each operations
   ```java
-     public void click(String image) throws Exception{
-         wait(image, Double.toString(this.timeout));
-         try {
-             screen.click(image);
-         }
-         catch (FindFailed e) {
-             capture();
-             throw new ScreenOperationException("Click "+image+" failed"+e.getMessage(), e);
-         }
-     }
- ```
-  * Keyword to handel similiar images issue, could check "click_in" test suite in demo folder to get details
-```java
+          public void click(String image) throws Exception{
+              wait(image, Double.toString(this.timeout));
+              try {
+                  screen.click(image);
+              }
+              catch (FindFailed e) {
+                  capture();
+                  throw new ScreenOperationException("Click "+image+" failed"+e.getMessage(), e);
+              }
+          }
+  ```
+* Keyword to handel similiar images issue, could check "click_in" test suite in demo folder to get details
+  ```java
      public void clickIn(String areaImage, String targetImage) throws Exception {
          wait(areaImage, Double.toString(this.timeout));
          Match match = screen.find(areaImage);
@@ -39,18 +39,19 @@ Sikuli Robot Framework Library provide keywords to test UI through [Sikulix](htt
          match.click(targetImage);
          capture(match.find(targetImage));
      }
-```
+  ```
 * Operating images could be shown in robot logs, easy to troubleshooting
 ![](https://github.com/rainmanwy/robotframework-SikuliLibrary/blob/master/docs/img/log.png "log")
 
 
 ## Installation
 ### Pip installation
-*If target OS is Windows, could use pip to install directly
+* If target OS is Windows, could use pip to install directly
 ```
 pip install robotframework-SikuliLibrary
 ```
-*If target OS is Linux, please download linux version from [pypi](https://pypi.python.org/pypi/robotframework-SikuliLibrary)
+* If target OS is Linux, please download linux version from [pypi](https://pypi.python.org/pypi/robotframework-SikuliLibrary)
+* Note: pypi version is not latest version, if you want to use latest version, please check "Build With Maven"
 ### Build With Maven
 * Clone this project, and execute maven package command
 * One zip file will be created in "target" folder, could unzip this file and add to PYTHONPATH
@@ -59,7 +60,7 @@ pip install robotframework-SikuliLibrary
 python setup.py install
 ```
 
-###Note
+### Note
 * For Linux, there are some dependencies need be installed, please check [sikuli quick start](http://www.sikulix.com/specials/files/linux-setup-prerequisites.html) to get more details.
 
 ## Start Server Manually
@@ -178,3 +179,20 @@ Could configure environment variable *DISABLE_SIKULI_LOG* to disable create log 
 ```
 Linux: export DISABLE_SIKULI_LOG=yes
 ```
+
+### Microsoft Management Console (MMC)
+In Windows environment, some applications are created using MMC. SikuliX is only able to interact with MMC if you launch as Administrator the Sikuli IDE or the test script using SikuliX library.
+
+If you start seeing errors like the below, you are running your tests against an MMC application as a non-admin:
+```
+[log] CLICK on L(1061,118)@S(0)[0,0 1920x1080]
+[error] RobotDesktop: checkMousePosition: should be L(1061,118)@S(0)[0,0 1920x1080]
+but after move is L(137,215)@S(0)[0,0 1920x1080]
+Possible cause in case you did not touch the mouse while script was running:
+ Mouse actions are blocked generally or by the frontmost application.
+You might try to run the SikuliX stuff as admin.
+```
+Another symptom is that your mouse will not move, and if it moves (there are random instances when the mouse moves), it will not click, so your test will fail. 
+
+Setting UAC to the lowest level (not to notify the user) will reduce the instances of MMC dialogs. This does not mean that UAC is turned off, just that it does not have any unnecessary popup when your tests are being run (or you will have to take care of them in your test scripts).
+

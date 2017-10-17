@@ -26,6 +26,7 @@ public class ScreenKeywords {
     private static double DEFAULT_TIMEOUT = 3.0;
     private final Screen screen = new Screen();
     private double timeout;
+    private Boolean isCaptureMatchedImage = true;
     private Map<String, Match> highlightMap = new HashMap<String, Match>();
 
     public ScreenKeywords() {
@@ -46,14 +47,28 @@ public class ScreenKeywords {
         return ImagePath.add(path);
     }
 
+    @RobotKeyword("Remove image path")
+    @ArgumentNames({"path"})
+    public boolean removeImagePath(String path) {
+        return ImagePath.remove(path);
+    }
+
     @RobotKeyword("Set folder for captured images")
     @ArgumentNames({"path"})
     public void setCaptureFolder(String path) {
         CaptureFolder.getInstance().setCaptureFolder(path);
     }
 
+    @RobotKeyword("Set capture matched images, the default value is true\n" +
+            "Example:\n" +
+            "| Set Capture Matched Image | false |")
+    @ArgumentNames({"value"})
+    public void setCaptureMatchedImage(boolean value) {
+        isCaptureMatchedImage = value;
+    }
+
     @RobotKeyword("Click image")
-    @ArgumentNames({"image"})
+    @ArgumentNames({"image", "xOffset=0", "yOffset=0"})
     public void click(String image) throws Exception{
         wait(image, Double.toString(this.timeout));
         try {
@@ -65,8 +80,23 @@ public class ScreenKeywords {
         }
     }
 
+    @RobotKeywordOverload
+    public void click(String image, int xOffset, int yOffset) throws Exception{
+        Match match = wait(image, Double.toString(this.timeout));
+        try {
+            int newX = match.getX() + xOffset;
+            int newY = match.getY() + yOffset;
+            Location newLocation = new Location(newX, newY);
+            screen.click(newLocation);
+        }
+        catch (FindFailed e) {
+            capture();
+            throw new ScreenOperationException("Click "+image+" failed"+e.getMessage(), e);
+        }
+    }
+
     @RobotKeyword("Double click image")
-    @ArgumentNames({"image"})
+    @ArgumentNames({"image", "xOffset=0", "yOffset=0"})
     public void doubleClick(String image) throws Exception{
         wait(image, Double.toString(this.timeout));
         try {
@@ -77,6 +107,22 @@ public class ScreenKeywords {
         }
     }
 
+//added by auyong    
+    @RobotKeywordOverload
+    public void doubleClick(String image, int xOffset, int yOffset) throws Exception{
+        Match match = wait(image, Double.toString(this.timeout));
+        try {
+            int newX = match.getX() + xOffset;
+            int newY = match.getY() + yOffset;
+            Location newLocation = new Location(newX, newY);
+            screen.doubleClick(newLocation);
+        }
+        catch (FindFailed e) {
+            capture();
+            throw new ScreenOperationException("Double Click "+image+" failed"+e.getMessage(), e);
+        }
+    }
+    
     @RobotKeyword("Right click image")
     @ArgumentNames({"image"})
     public void rightClick(String image) throws Exception{
@@ -164,6 +210,33 @@ public class ScreenKeywords {
         }
     }
 
+    @RobotKeyword("Type with modifiers" +
+            "\n Example:" +
+            "\n |Type With Modifiers| A| CTRL |")
+    @ArgumentNames({"text", "*modifiers"})
+    public void typeWithModifiers(String text, String[] modifiers) throws Exception {
+        System.out.println("Input Text:");
+        String keys = "";
+        for (String modifier : modifiers) {
+            keys = modifier + "+";
+        }
+        keys = keys + text;
+        System.out.println(keys);
+
+        int sum = 0;
+        for (String modifer : modifiers) {
+            try {
+                Object key = KeyModifier.class.getField(modifer).get(null);
+                sum = sum + (Integer) key;
+            } catch(ReflectiveOperationException e){
+                throw new ScreenOperationException("No " +modifer.toString() + " in class org.sikuli.script.Key ");
+            }
+        }
+
+        screen.type(text, sum);
+
+    }
+
     @RobotKeyword("Paste text. Image could be empty")
     @ArgumentNames({"image", "text"})
     public void pasteText(String image, String text) throws Exception {
@@ -215,12 +288,14 @@ public class ScreenKeywords {
     }
 
     private void capture(Region region) {
-        ScreenImage image = screen.capture(region);
-        String imagePath = image.save(CaptureFolder.getInstance().getCaptureFolder());
-        System.out.println("*DEBUG* Saved path: "+imagePath);
-        File file = new File(imagePath);
-        String fileName = file.getName();
-        System.out.println("*HTML* <img src='" + CaptureFolder.getInstance().getSubFolder() + "/" + fileName + "'/>");
+        if (isCaptureMatchedImage) {
+            ScreenImage image = screen.capture(region);
+            String imagePath = image.save(CaptureFolder.getInstance().getCaptureFolder());
+            System.out.println("*DEBUG* Saved path: "+imagePath);
+            File file = new File(imagePath);
+            String fileName = file.getName();
+            System.out.println("*HTML* <img src='" + CaptureFolder.getInstance().getSubFolder() + "/" + fileName + "'/>");
+        }
     }
 
     @RobotKeyword("Capture whole screen")
@@ -343,7 +418,7 @@ public class ScreenKeywords {
                 + "\n | Mouse Move              | test.png | "
                 + "\n | Screen Should Contain   | test.png | "
                 + "\n | Mouse Move |")
-    @ArgumentNames({"image"})
+    @ArgumentNames({"image="})
     public void mouseMove(String image) throws Exception{
         Match match = wait(image, Double.toString(this.timeout));
         int result = match.mouseMove(image);
