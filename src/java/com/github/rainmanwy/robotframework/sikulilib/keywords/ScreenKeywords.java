@@ -1,9 +1,13 @@
 package com.github.rainmanwy.robotframework.sikulilib.keywords;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
+
 import java.util.HashMap;
+import java.util.List;
 
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
@@ -539,29 +543,80 @@ public class ScreenKeywords {
         Image matchImage = match.getImage();
         return matchImage.text();
     }
-
-    @RobotKeyword("Wait For Image"
-            + "\n\n Check wantedImage exist. If notWantedImage appear or timeout happened, throw exception"
-            + "\n @wantedImage: expected image in screen"
-            + "\n @notWantedImage: unexpected image in screen"
+    
+    @RobotKeyword("Wait For Multiple Images"
+            + "\n\n Check if images exists in expectedAndNotExpectedImages list. "
+            + "If image appears that is listed in expectedAndNotExpectedImages list starting from notExpectedImagesStartIndex"
+            + " or timeout happened, throw exception "
+            + "If image appears that is listed starting from index 0 to notExpectedImagesStartIndex in expectedAndNotExpectedImages "
+            + "list return succesfully. "
+            + "If notExpectedImagesStartIndex=-1 all images in expectedAndNotExpectedImages list are treated as expected. "
+            + "If notExpectedImagesStartIndex=0 all images in expectedAndNotExpectedImages list are treated as not expected. "
             + "\n @timeout: wait seconds"
+            + "\n @pollingTime: time in seconds between screen checks"
+            + "\n @notExpectedImagesStartIndex: index of expectedAndNotExpectedImages where images not expected start, "
+            + "notExpectedImagesStartIndex=0 means all images found will throw exception notExpectedImagesStartIndex=-1 means "
+            + "first image found will return succesfully"
+            + "\n @expectedAndNotExpectedImages: list of unexpected and/or expected images in screen"
             + "\n\n Example Usage:"
-            + "\n | Wait For Image  | wanted.png | notWanted.png | 5 |")
-    @ArgumentNames({"image="})
-    public void waitForImage(String wantedImage, String notWantedImage, int timeout) throws Exception {
-        Date begineTime = new Date();
-        while (System.currentTimeMillis() - begineTime.getTime() < timeout*1000) {
-            Match wantedMatch = screen.exists(wantedImage, 0);
-            Match notWantedMatch = screen.exists(notWantedImage, 0);
-            if (wantedMatch != null) {
-                return;
-            } else if ( notWantedMatch != null ) {
-                throw new ScreenOperationException(notWantedImage + " is founded! " + notWantedMatch);
-            } else {
-                Thread.sleep(500);
-            }
+            + "\n | Wait For Multiple Images | 900 | 10 | 1 | common_read_write_success.png | common_read_write_cancelled.png |")
+    @ArgumentNames({"timeout", "pollingTime", "notExpectedImagesStartIndex", "*expectedAndNotExpectedImages"})
+    public String waitForMultipleImages(int timeout, int pollingTime, 
+    		int notExpectedImagesStartIndex, String[] expectedAndNotExpectedImages) throws Exception {
+    	
+    	Date beginTime = new Date();        
+        List<String> wantedImages = new ArrayList<String>();
+        List<String> notWantedImages = new ArrayList<String>();        
+        int imagesLength = expectedAndNotExpectedImages.length;
+        
+        if(imagesLength == 0) 
+        {
+        	throw new Exception("expectedAndNotExpectedImages must not be empty.");
         }
-        throw new TimeoutException("Could not find " + wantedImage);
+        
+        if(notExpectedImagesStartIndex < -1 || notExpectedImagesStartIndex >= imagesLength)
+        {
+        	
+        	throw new Exception("notExpectedImagesStartIndex must be -1 or between 0 .. " + (imagesLength - 1));        	
+        }                
+        
+        if(notExpectedImagesStartIndex == -1)
+        {
+        	wantedImages.addAll(Arrays.asList(expectedAndNotExpectedImages));
+        }
+        else if(notExpectedImagesStartIndex == 0)
+        {
+        	notWantedImages.addAll(Arrays.asList(expectedAndNotExpectedImages));
+        }
+        else
+        {
+        	wantedImages.addAll(Arrays.asList(expectedAndNotExpectedImages).subList(0, notExpectedImagesStartIndex));
+        	notWantedImages.addAll(Arrays.asList(expectedAndNotExpectedImages).subList(notExpectedImagesStartIndex, imagesLength));
+        }
+        
+        while (System.currentTimeMillis() - beginTime.getTime() < timeout*1000) {
+    		
+        	for (String wantedImage : wantedImages)
+        	{
+	        	Match wantedMatch = screen.exists(wantedImage, 0);
+	    		
+	    		if (wantedMatch != null) {
+	                return wantedImage;
+	            }
+        	}
+        	
+        	for (String notWantedImage : notWantedImages) {
+        		Match notWantedMatch = screen.exists(notWantedImage, 0);
+        		
+        		if (notWantedMatch != null) {
+        			capture();
+                    throw new ScreenOperationException(notWantedImage + " is founded! " + notWantedMatch);
+                }
+        	}
+            
+        	Thread.sleep(pollingTime * 1000);
+        }
+        throw new TimeoutException("Could not find any images " + Arrays.toString(expectedAndNotExpectedImages));
 
     }
 
