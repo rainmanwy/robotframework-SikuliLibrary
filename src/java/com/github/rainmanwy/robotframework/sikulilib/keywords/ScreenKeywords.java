@@ -552,16 +552,16 @@ public class ScreenKeywords {
             + "list return succesfully. "
             + "If notExpectedImagesStartIndex=-1 all images in expectedAndNotExpectedImages list are treated as expected. "
             + "If notExpectedImagesStartIndex=0 all images in expectedAndNotExpectedImages list are treated as not expected. "
-            + "\n @timeout: wait seconds"
-            + "\n @pollingTime: time in seconds between screen checks"
-            + "\n @notExpectedImagesStartIndex: index of expectedAndNotExpectedImages where images not expected start, "
+            + "\n\n @timeout: wait seconds"
+            + "\n\n @pollingInterval: time in seconds between screen checks"
+            + "\n\n @notExpectedImagesStartIndex: index of expectedAndNotExpectedImages where images not expected start, "
             + "notExpectedImagesStartIndex=0 means all images found will throw exception notExpectedImagesStartIndex=-1 means "
             + "first image found will return succesfully"
-            + "\n @expectedAndNotExpectedImages: list of unexpected and/or expected images in screen"
+            + "\n\n @expectedAndNotExpectedImages: list of unexpected and/or expected images in screen"
             + "\n\n Example Usage:"
             + "\n | Wait For Multiple Images | 900 | 10 | 1 | common_read_write_success.png | common_read_write_cancelled.png |")
-    @ArgumentNames({"timeout", "pollingTime", "notExpectedImagesStartIndex", "*expectedAndNotExpectedImages"})
-    public String waitForMultipleImages(int timeout, int pollingTime, 
+    @ArgumentNames({"timeout", "pollingInterval", "notExpectedImagesStartIndex", "*expectedAndNotExpectedImages"})
+    public String waitForMultipleImages(int timeout, int pollingInterval, 
     		int notExpectedImagesStartIndex, String[] expectedAndNotExpectedImages) throws Exception {
     	
     	Date beginTime = new Date();        
@@ -610,12 +610,14 @@ public class ScreenKeywords {
         		
         		if (notWantedMatch != null) {
         			capture();
-                    throw new ScreenOperationException(notWantedImage + " is founded! " + notWantedMatch);
+                    throw new ScreenOperationException(notWantedImage + " is found! " + notWantedMatch);
                 }
         	}
             
-        	Thread.sleep(pollingTime * 1000);
+        	Thread.sleep(pollingInterval * 1000);
         }
+        
+        capture();
         throw new TimeoutException("Could not find any images " + Arrays.toString(expectedAndNotExpectedImages));
 
     }
