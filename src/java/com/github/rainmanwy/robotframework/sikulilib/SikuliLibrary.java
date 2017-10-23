@@ -7,6 +7,10 @@ import org.robotframework.remoteserver.RemoteServer;
 
 import com.github.rainmanwy.robotframework.sikulilib.utils.CaptureFolder;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by Wang Yang on 2015/8/19.
  */
@@ -42,10 +46,16 @@ public class SikuliLibrary implements KeywordDocumentationRepository, RobotJavaL
     }
 
     private Object[] toStrings(Object[] args) {
+        System.out.println("Params: " + Arrays.toString(args));
         Object[] newArgs = new Object[args.length];
         for (int i = 0; i < newArgs.length; i++) {
-            if (args[i].getClass().isArray())
-                newArgs[i] = args[i];
+            if (args[i].getClass().isArray()) {
+                List<Object> newList = new ArrayList<Object>(((Object[])args[i]).length);
+                for (Object o : (Object[])args[i]) {
+                    newList.add(o);
+                }
+                newArgs[i] = newList;
+            }
             else {
                 newArgs[i] = args[i].toString();
             }
