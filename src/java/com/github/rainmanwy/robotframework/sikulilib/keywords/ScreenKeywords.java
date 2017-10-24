@@ -1,9 +1,13 @@
 package com.github.rainmanwy.robotframework.sikulilib.keywords;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
+
 import java.util.HashMap;
+import java.util.List;
 
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
@@ -539,15 +543,15 @@ public class ScreenKeywords {
         Image matchImage = match.getImage();
         return matchImage.text();
     }
-
+    
     @RobotKeyword("Wait For Image"
             + "\n\n Check wantedImage exist. If notWantedImage appear or timeout happened, throw exception"
-            + "\n @wantedImage: expected image in screen"
-            + "\n @notWantedImage: unexpected image in screen"
-            + "\n @timeout: wait seconds"
+            + "\n\n @wantedImage: expected image in screen"
+            + "\n\n @notWantedImage: unexpected image in screen"
+            + "\n\n @timeout: wait seconds"
             + "\n\n Example Usage:"
             + "\n | Wait For Image  | wanted.png | notWanted.png | 5 |")
-    @ArgumentNames({"image="})
+    @ArgumentNames({"wantedImage", "notWantedImage", "timeout"})
     public void waitForImage(String wantedImage, String notWantedImage, int timeout) throws Exception {
         Date begineTime = new Date();
         while (System.currentTimeMillis() - begineTime.getTime() < timeout*1000) {
@@ -562,6 +566,53 @@ public class ScreenKeywords {
             }
         }
         throw new TimeoutException("Could not find " + wantedImage);
+
+    }
+    
+    @RobotKeyword("Wait For Multiple Images"
+            + "\n\n Check if images exists in expectedImages or notExpectedImages list. "
+            + "If image appears that is listed in notExpectedImages list or timeout happened, throw exception "
+            + "If image appears that is listed in expectedImageslist return succesfully. "
+            + "\n\n @timeout: wait seconds"
+            + "\n\n @pollingInterval: time in seconds between screen checks"
+            + "\n\n @expectedImages: list of expected images in screen"
+            + "\n\n @notExpectedImages: list of not expected images in screen"
+            + "\n\n Example Usage:"
+            + "\n | @{wanted_images} =  | Create List | wanted_image1.png | wanted_image2.png |"
+            + "\n | @{not_wanted_images} =  | Create List | not_wanted_image1.png | not_wanted_image2.png | not_wanted_image3.png |"
+            + "\n | Wait For Multiple Images | 900 | 10 | ${wanted_images} | ${not_wanted_images} |")
+    @ArgumentNames({"timeout", "pollingInterval", "expectedImages", "notExpectedImages"})
+    public String waitForMultipleImages(int timeout, int pollingInterval, 
+    		ArrayList<String> expectedImages, ArrayList<String> notExpectedImages) throws Exception {
+    	
+    	Date beginTime = new Date();
+        
+        while (System.currentTimeMillis() - beginTime.getTime() < timeout*1000) {
+    		
+        	for (String wantedImage : expectedImages)
+        	{
+	        	Match wantedMatch = screen.exists(wantedImage, 0);
+	    		
+	    		if (wantedMatch != null) {
+	                return wantedImage;
+	            }
+        	}
+        	
+        	for (String notWantedImage : notExpectedImages) {
+        		Match notWantedMatch = screen.exists(notWantedImage, 0);
+        		
+        		if (notWantedMatch != null) {
+        			capture();
+                    throw new ScreenOperationException(notWantedImage + " is found! " + notWantedMatch);
+                }
+        	}
+            
+        	Thread.sleep(pollingInterval * 1000);
+        }
+        
+        capture();
+        throw new TimeoutException("Could not find any images " + Arrays.toString(expectedImages.toArray()) + 
+        		Arrays.toString(notExpectedImages.toArray()));
 
     }
 
