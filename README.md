@@ -2,7 +2,7 @@ Sikuli Robot Framework Library
 ==============================
 
 ## Introduction
-Sikuli Robot Framework Library provide keywords to test UI through [Sikulix](http://sikulix.com/).
+Sikuli Robot Framework Library provide keywords to test UI through [Sikulix](http://sikulix.com/). This library support python 2.x, and python 3.x
 
 ## Keyword Documentation
 [Keywords](http://rainmanwy.github.io/robotframework-SikuliLibrary/doc/SikuliLibrary.html)
