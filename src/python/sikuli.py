@@ -1,8 +1,8 @@
-'''
+"""
 Created on 2015-08-19
 
 @author: wang_yang1980@hotmail.com
-'''
+"""
 
 import socket
 import logging
@@ -10,10 +10,15 @@ import sys
 import os
 import glob
 import time
-import urllib
 import threading
-
-from xmlrpclib import ProtocolError
+try:
+    from urllib import urlopen
+except ImportError:
+    from urllib.request import urlopen
+try:
+    from xmlrpclib import ProtocolError
+except ImportError:
+    from xmlrpc.client import ProtocolError
 from robot.libraries.Process import Process
 from robot.libraries.Remote import Remote
 from robot.libraries.BuiltIn import BuiltIn
@@ -39,11 +44,12 @@ class SikuliLibrary(object):
         self.port = port
         start_retries = 0
         started = False
-        while(start_retries < 5):
+        while start_retries < 5:
             try:
                 self._start_sikuli_java_process()
-            except RuntimeError, err:
-                if(self.process):
+            except RuntimeError as err:
+                print('error........%s' % err)
+                if self.process:
                     self.process.terminate_process()
                 self.port = self._get_free_tcp_port()
                 start_retries += 1
@@ -64,8 +70,8 @@ class SikuliLibrary(object):
     def _check_robot_running(self):
         try:
             BuiltIn().get_variable_value('${SUITE SOURCE}')
-        except Exception, err:
-            self.logger.warn('Robot may not running, stop java process: %s' % err.message)
+        except Exception as err:
+            self.logger.warn('Robot may not running, stop java process: %s' % err)
             self._stop_thread(1)
 
     def _init_logger(self):
@@ -84,7 +90,7 @@ class SikuliLibrary(object):
         try:
             logLevel = builtIn.get_variable_value('${LOG_LEVEL}')
             level = robotLogLevels[logLevel]
-        except Exception, err:
+        except Exception:
             pass
         logger.setLevel(level)
         return logger
@@ -97,7 +103,6 @@ class SikuliLibrary(object):
         self.logger.debug('Free TCP port is: %d' % port)
         sock.close()
         return port
-
 
     def _start_sikuli_java_process(self):
         libFolder = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'lib')
@@ -120,10 +125,10 @@ class SikuliLibrary(object):
         url = "http://127.0.0.1:%s/" % str(self.port)
         currentTime = startedTime = time.time()
         started = False
-        while((currentTime-startedTime)<self.timeout):
+        while (currentTime-startedTime) < self.timeout:
             try:
-                urllib.urlopen(url).read()
-            except Exception, err:
+                urlopen(url).read()
+            except Exception:
                 currentTime = time.time()
                 time.sleep(1.0)
                 continue
@@ -147,7 +152,7 @@ class SikuliLibrary(object):
         outputDir = os.path.abspath(os.curdir)
         try:
             outputDir = BuiltIn().get_variable_value('${OUTPUTDIR}')
-        except Exception, err:
+        except Exception:
             pass
         return outputDir
 
@@ -160,11 +165,11 @@ class SikuliLibrary(object):
     def _test_get_keyword_names(self, remote):
         currentTime = startedTime = time.time()
         started = False
-        while((currentTime-startedTime)<self.timeout):
+        while (currentTime-startedTime) < self.timeout:
             try:
                 remote.get_keyword_names()
-            except Exception, err:
-                self.logger.warn("Test get_keyword_names failed! %s" % err.message)
+            except Exception as err:
+                self.logger.warn("Test get_keyword_names failed! %s" % err)
                 currentTime = time.time()
                 time.sleep(1.0)
                 continue
@@ -192,4 +197,3 @@ class SikuliLibrary(object):
         
         thread = threading.Thread(target=stop, args=())
         thread.start()
-    
