@@ -6,3 +6,11 @@ Created on 2015-08-20
 
 from .sikuli import SikuliLibrary
 
+
+def main():
+    lib = SikuliLibrary(mode='CREATE')
+
+
+if __name__ == '__main__':
+    main()
+
