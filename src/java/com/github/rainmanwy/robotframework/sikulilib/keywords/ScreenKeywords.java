@@ -282,16 +282,17 @@ public class ScreenKeywords {
         match.rightClick(targetImage);
     }
 
-    private void capture() {
+    private String capture() {
         ScreenImage image = screen.capture();
         String imagePath = image.save(CaptureFolder.getInstance().getCaptureFolder());
         System.out.println("*DEBUG* Saved path: "+imagePath);
         File file = new File(imagePath);
         String fileName = file.getName();
         System.out.println("*HTML* <img src='" + CaptureFolder.getInstance().getSubFolder() + "/" + fileName + "'/>");
+        return fileName;
     }
 
-    private void capture(Region region) {
+    private String capture(Region region) {
         if (isCaptureMatchedImage) {
             ScreenImage image = screen.capture(region);
             String imagePath = image.save(CaptureFolder.getInstance().getCaptureFolder());
@@ -299,13 +300,15 @@ public class ScreenKeywords {
             File file = new File(imagePath);
             String fileName = file.getName();
             System.out.println("*HTML* <img src='" + CaptureFolder.getInstance().getSubFolder() + "/" + fileName + "'/>");
+            return fileName;
         }
+        return null;
     }
 
-    @RobotKeyword("Capture whole screen")
+    @RobotKeyword("Capture whole screen, file name is returned")
     @ArgumentNames({})
-    public void captureScreen(){
-        capture();
+    public String captureScreen(){
+        return capture();
     }
 
     @RobotKeyword("Highlight matched image")
