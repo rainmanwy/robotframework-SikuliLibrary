@@ -76,9 +76,9 @@ Library        Remote        http://<ip>:<port>/
 ```
 
 ## "NEW" mode
-As Robot Framework will get keyword information(keyword name, keyword documentation and keyword arguments) when library is initializing.
-By default, SikuliLibrary will start sikuli java process when library is initializing. This bring some problems.
-Now with "NEW" mode, sikuli java process will not be started when library is initializing by Robot Framework. And user could use keyword [Start Sikuli Process](http://rainmanwy.github.io/robotframework-SikuliLibrary/doc/SikuliLibrary.html#Start%20Sikuli%20Process) explicitly.
+As Robot Framework will get keyword information(keyword name, keyword documentation and keyword arguments) when init library.
+By default, SikuliLibrary will start sikuli java process implicitly. This behavior bring some problems.
+Now with "NEW" mode, user could use keyword [Start Sikuli Process](http://rainmanwy.github.io/robotframework-SikuliLibrary/doc/SikuliLibrary.html#Start%20Sikuli%20Process) to start the process explicitly.
 You may check the detail in [issue 16](https://github.com/rainmanwy/robotframework-SikuliLibrary/issues/16)
 Example:
 ```
