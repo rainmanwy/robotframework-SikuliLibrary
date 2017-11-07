@@ -87,9 +87,10 @@ public class ScreenKeywords {
     @RobotKeywordOverload
     public void click(String image, int xOffset, int yOffset) throws Exception{
         Match match = wait(image, Double.toString(this.timeout));
+        Location center = match.getCenter();
         try {
-            int newX = match.getX() + xOffset;
-            int newY = match.getY() + yOffset;
+            int newX = center.getX() + xOffset;
+            int newY = center.getY() + yOffset;
             Location newLocation = new Location(newX, newY);
             screen.click(newLocation);
         }
