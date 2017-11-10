@@ -51,7 +51,7 @@ Sikuli Robot Framework Library provide keywords to test UI through [Sikulix](htt
 pip install robotframework-SikuliLibrary
 ```
 * If target OS is Linux, please download linux version from [pypi](https://pypi.python.org/pypi/robotframework-SikuliLibrary)
-* Note: pypi version is not latest version, if you want to use latest version, please check "Build With Maven"
+* Note: pypi version may not latest version, if you want to use latest version, please check "Build With Maven"
 ### Build With Maven
 * Clone this project, and execute maven package command
 * One zip file will be created in "target" folder, could unzip this file and add to PYTHONPATH
@@ -62,6 +62,8 @@ python setup.py install
 
 ### Note
 * For Linux, there are some dependencies need be installed, please check [sikuli quick start](http://www.sikulix.com/specials/files/linux-setup-prerequisites.html) to get more details.
+* Python should be installed as maven will execute python command
+* OS should allow java process access Internet 
 
 ## Start Server Manually
 SikuliLibrary contains a standalone jar file which could be started in command line. Sometimes user want to do test on different OS. The steps are:
