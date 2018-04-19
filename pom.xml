@@ -176,7 +176,7 @@
 								<echo message="unzip package" />
 								<unzip src="target/SikuliLibrary.zip" dest="target/src" />
 								<echo message="generate keywords.py" />
-								<exec dir="target/src" executable="python" failonerror="true">
+								<exec dir="target/src" executable="python3" failonerror="true">
 									<arg line="-m SikuliLibrary.__init__" />
 								</exec>
 								<!--<unzip src="output/inner.zip" dest="output" />-->
