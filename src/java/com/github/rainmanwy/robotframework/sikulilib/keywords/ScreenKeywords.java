@@ -312,19 +312,29 @@ public class ScreenKeywords {
         return capture();
     }
 
-    @RobotKeyword("Highlight matched image")
-    @ArgumentNames({"image"})
-    public void highlight(String image) throws Exception{
+    @RobotKeyword("Highlight matched image.\n If secs is set, highlight will vanish automatically after setted seconds")
+    @ArgumentNames({"image", "secs="})
+    public void highlight(String image, Integer secs) throws Exception{
         Match match = null;
         if (highlightMap.containsKey(image)==false) {
             match = screen.find(image);
-            highlightMap.put(image, match);
-            match.highlight();
+            if (secs != null) {
+                match.highlight(secs);
+            } else {
+                highlightMap.put(image, match);
+                match.highlight();
+            }
             capture();
         } else {
             System.out.println("*WARN* "+image+" was already highlighted");
         }
     }
+
+    @RobotKeywordOverload
+    public void highlight(String image) throws Exception{
+        this.highlight(image, null);
+    }
+
 
     @RobotKeyword("Clear highlight from screen")
     @ArgumentNames({"image"})
