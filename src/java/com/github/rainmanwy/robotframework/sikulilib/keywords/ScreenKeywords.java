@@ -28,7 +28,7 @@ import org.sikuli.script.*;
 public class ScreenKeywords {
 
     private static double DEFAULT_TIMEOUT = 3.0;
-    private final Screen screen = new Screen();
+    private static Screen screen = new Screen();
     private double timeout;
     private Boolean isCaptureMatchedImage = true;
     private Map<String, Match> highlightMap = new HashMap<String, Match>();
@@ -648,6 +648,19 @@ public class ScreenKeywords {
     @RobotKeywordOverload
     public Boolean exists(String image) throws Exception{
         return exists(image, 0);
+    }
+
+    @RobotKeyword("Change screen id" +
+            "\n\n For multi display, user could use this keyword to switch to the correct scrren")
+    @ArgumentNames({"screenId"})
+    public void changeScreenId(int screenId) {
+        screen = new Screen(screenId);
+    }
+
+    @RobotKeyword("Get current screen number")
+    @ArgumentNames({})
+    public int getCurrentScreenId() {
+        return screen.getID();
     }
 
 }
