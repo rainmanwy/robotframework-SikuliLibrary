@@ -3,8 +3,7 @@ Created on 2015/12/10
 
 Author: by wang_yang1980@hotmail.com
 '''
-
-from distutils.core import setup
+from setuptools import setup
 
 from os.path import abspath, dirname, join
 with open(join(dirname(abspath(__file__)), 'target', 'src', 'SikuliLibrary', 'version.py')) as f:
