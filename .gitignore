@@ -3,3 +3,5 @@ class
 dist
 target
 *.iml
+teste
+.vscode

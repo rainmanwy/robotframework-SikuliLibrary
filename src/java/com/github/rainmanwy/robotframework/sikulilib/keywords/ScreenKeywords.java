@@ -663,4 +663,38 @@ public class ScreenKeywords {
         return screen.getID();
     }
 
+    @RobotKeyword("Get extended region from" + 
+                "\n Extended the given image creating a region above or below with the same width" + 
+                "\n The height can change using the multiplier @number_of_times_to_repeat, if 2 is given the new region will have twice the height of the orignal ")
+    @ArgumentNames({"image", "direction", "number_of_times_to_repeat"})
+    public Region getExtendedRegionFrom(String image, String direction, int number_of_times_to_repeat) throws Exception {
+        Match match = null;
+        try{
+            match = screen.find(image);
+            Region new_region = new Region(match);
+            int height = new_region.h;
+            int width = new_region.w;
+            //match.highlight(2);
+            
+            Region r = null;
+            if (direction.equals("below")){
+                r = new_region.below(height * number_of_times_to_repeat);
+                r.highlight(1);
+            }
+            else if(direction.equals("above")){
+                r = new_region.above(height * number_of_times_to_repeat);
+                r.highlight(1);
+            }
+            else{
+                r = new_region;
+            }
+
+            return r;
+        }
+        catch (FindFailed e) {
+            capture();
+            throw new ScreenOperationException("Extended image "+image+" failed" + e.getMessage(), e);    
+        }
+       
+    }
 }
