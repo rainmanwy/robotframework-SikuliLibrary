@@ -5,3 +5,6 @@ target
 *.iml
 teste
 .vscode
+.classpath
+.project
+.settings/
