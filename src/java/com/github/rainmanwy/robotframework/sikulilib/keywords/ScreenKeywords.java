@@ -545,7 +545,6 @@ public class ScreenKeywords {
     @ArgumentNames({"image="})
     public String getText() throws Exception {
         return screen.text();
-
     }
 
     @RobotKeywordOverload
@@ -663,4 +662,68 @@ public class ScreenKeywords {
         return screen.getID();
     }
 
+    @RobotKeyword("Get extended region from" + 
+                "\n Extended the given image creating a region above or below with the same width" + 
+                "\n The height can change using the multiplier @number_of_times_to_repeat, if 2 is given the new region will have twice the height of the orignalge ")
+    @ArgumentNames({"image", "direction", "number_of_times_to_repeat"})
+    public int[] getExtendedRegionFrom(String image, String direction, int number_of_times_to_repeat) throws Exception {
+        
+        Match match = null;
+        try{
+            match = screen.find(image);
+            Region new_region = new Region(match);
+            int height = new_region.h;
+            int width = new_region.w;
+                        
+            Region r = null;
+            int [] result = new int[4];
+            if (direction.equals("below")){
+                r = new_region.below(height * number_of_times_to_repeat);
+                r.highlight(1);
+            }
+            else if(direction.equals("above")){
+                r = new_region.above(height * number_of_times_to_repeat);
+                r.highlight(1);
+            }
+            else if(direction.equals("left")){
+                r = new_region.left(height * number_of_times_to_repeat);
+            }
+            else if(direction.equals("right")){
+                r = new_region.right(height * number_of_times_to_repeat);
+            }
+            else{
+                r = new_region;
+            }
+            System.out.println(r);
+            result[0] = r.x;
+            result[1] = r.y;
+            result[2] = r.w;
+            result[3] = r.h;
+            return result;
+        }
+        catch (FindFailed e) {
+            capture();
+            throw new ScreenOperationException("Extended image "+image+" failed" + e.getMessage(), e);    
+        }
+       
+    }
+
+    @RobotKeyword("Read text from given region")
+    @ArgumentNames({"reg"})
+    public String readTextFromRegion(ArrayList<Object> reg){
+        System.out.println("reg variable: " + reg);
+        
+        int x = Integer.parseInt(reg.get(0).toString());
+        int y = Integer.parseInt(reg.get(1).toString()); 
+        int w = Integer.parseInt(reg.get(2).toString()); 
+        int h = Integer.parseInt(reg.get(3).toString()); 
+        
+        Region region = new Region(x,y,w,h);
+        if(region != null){
+            return region.text();
+        }else{
+            System.out.println("error region test: " + reg);
+            return "ERROR";
+        }
+    }
 }
