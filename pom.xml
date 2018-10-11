@@ -55,7 +55,7 @@
         <dependency>
             <groupId>com.sikulix</groupId>
             <artifactId>sikulixapi</artifactId>
-            <version>1.1.4</version>
+            <version>1.1.2</version>
         </dependency>
         <!--dependency>
             <groupId>org.robotframework</groupId>
@@ -71,7 +71,7 @@
         <dependency>
             <groupId>com.sikulix</groupId>
             <artifactId>${sikulix.libs}</artifactId>
-            <version>1.1.4</version>
+            <version>1.1.2-SNAPSHOT</version>
         </dependency>
 
     </dependencies>
@@ -205,7 +205,7 @@
                                 <echo message="unzip package"/>
                                 <unzip src="target/SikuliLibrary.zip" dest="target/src"/>
                                 <echo message="generate keywords.py"/>
-                                <exec dir="target/src" executable="python" failonerror="true">
+                                <exec dir="target/src" executable="python3" failonerror="true">
                                     <arg line="-m SikuliLibrary.__init__"/>
                                 </exec>
                                 <!--<unzip src="output/inner.zip" dest="output" />-->
