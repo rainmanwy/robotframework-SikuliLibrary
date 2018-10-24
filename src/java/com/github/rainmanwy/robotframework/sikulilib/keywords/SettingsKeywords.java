@@ -12,7 +12,7 @@ import org.sikuli.basics.Settings;
 @RobotKeywords
 public class SettingsKeywords {
 
-    @RobotKeyword("Set Sikuli minSimilarity(0-1)")
+    @RobotKeyword("Set min similarity")
     @ArgumentNames({"minSimilarity"})
     public String setMinSimilarity(String minSimilarity) {
         double prevMinSimilarity = Settings.MinSimilarity;
@@ -20,10 +20,35 @@ public class SettingsKeywords {
         return Double.toString(prevMinSimilarity);
     }
 
-    @RobotKeyword("Set Sikuli OCR text read(true/false)")
+    @RobotKeyword("OCR text read")
     @ArgumentNames({"ocrTextRead"})
     public void setOcrTextRead(boolean ocrTextRead) {
         Settings.OcrTextRead = ocrTextRead;
     }
 
+    @RobotKeyword("Set show actions")
+    @ArgumentNames({"showActions"})
+    public void setShowActions(boolean showActions) {
+        Settings.setShowActions(showActions);
+    }
+
+    @RobotKeyword("Set move mouse delay")
+    @ArgumentNames({"delay"})
+    public void setMoveMouseDelay(float delay) {
+        Settings.MoveMouseDelay = delay;
+    }
+
+    @RobotKeyword("Set slow motion delay"
+            + "\n Control the duration of the visual effect (seconds).")
+    @ArgumentNames({"delay"})
+    public void setSlowMotionDelay(float delay) {
+        Settings.SlowMotionDelay = delay;
+    }
+
+    @RobotKeyword("Set wait scan rate"
+            + "\n Specify the number of times actual search operations are performed per second while waiting for a pattern to appear or vanish.")
+    @ArgumentNames({"delay"})
+    public void setWaitScanRate(float scanRate) {
+        Settings.WaitScanRate = scanRate;
+    }
 }
