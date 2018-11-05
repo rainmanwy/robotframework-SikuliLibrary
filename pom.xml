@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.rainmanwy.robotframework</groupId>
     <artifactId>robotframework-SikuliLibrary</artifactId>
-    <version>1.0</version>
+    <version>1.4</version>
     <packaging>jar</packaging>
     <name>robotframework-SikuliLibrary</name>
 

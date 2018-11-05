@@ -13,6 +13,8 @@ public class CaptureFolder {
     private static CaptureFolder MYSELF = null;
     private boolean setted = false;
 
+    public Boolean isCaptureMatchedImage = true;
+
     private CaptureFolder() {}
 
     public static CaptureFolder getInstance() {
