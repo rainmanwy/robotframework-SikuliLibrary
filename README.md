@@ -7,6 +7,12 @@ Sikuli Robot Framework Library provide keywords to test UI through [Sikulix](htt
 ## Keyword Documentation
 [Keywords](http://rainmanwy.github.io/robotframework-SikuliLibrary/doc/SikuliLibrary.html)
 
+## Mapping With Sikulixapi Version
+As this library is depended with sikulixapi, below table describe the mapping between SikuliLibrary version and sikulixapi version
+||  Tag         ||  sikulixapi  ||
+|  [v1.1.2]()   |   1.1.2       |
+
+
 ## Overview
 ![](https://github.com/rainmanwy/robotframework-SikuliLibrary/blob/master/docs/img/architecture.png "architecture")
 * This library is implemented with [Robot Framework Remote Library](https://code.google.com/p/robotframework/wiki/RemoteLibrary)
