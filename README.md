@@ -9,7 +9,9 @@ Sikuli Robot Framework Library provide keywords to test UI through [Sikulix](htt
 
 ## Mapping With Sikulixapi Version
 As this library is depended with sikulixapi, below table describe the mapping between SikuliLibrary version and sikulixapi version
-||  Tag         ||  sikulixapi  ||
+
+|  Tag          |  sikulixapi   |
+|  ---          |  ---          |
 |  [v1.1.2]()   |   1.1.2       |
 
 
