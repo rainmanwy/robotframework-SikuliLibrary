@@ -55,7 +55,7 @@
         <dependency>
             <groupId>com.sikulix</groupId>
             <artifactId>sikulixapi</artifactId>
-            <version>1.1.4-SNAPSHOT</version>
+            <version>1.1.2</version>
         </dependency>
         <!--dependency>
             <groupId>org.robotframework</groupId>
@@ -68,7 +68,37 @@
             <version>3.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.sikulix</groupId>
+            <artifactId>${sikulix.libs}</artifactId>
+            <version>1.1.2-SNAPSHOT</version>
+        </dependency>
+
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>Windows</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <sikulix.libs>sikulixlibswin</sikulix.libs>
+            </properties>
+        </profile>
+        <profile>
+            <id>Unix</id>
+            <properties>
+                <sikulix.libs>sikulixlibslux</sikulix.libs>
+            </properties>
+        </profile>
+        <profile>
+            <id>Mac</id>
+            <properties>
+                <sikulix.libs>sikulixlibsmac</sikulix.libs>
+            </properties>
+        </profile>
+    </profiles>
 
     <build>
         <sourceDirectory>src/java</sourceDirectory>
