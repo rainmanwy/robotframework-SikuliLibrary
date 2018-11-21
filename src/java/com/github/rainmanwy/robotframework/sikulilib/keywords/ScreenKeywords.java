@@ -375,7 +375,7 @@ public class ScreenKeywords {
         System.out.println("Input Text:");
         String keys = "";
         for (String modifier : modifiers) {
-            keys = modifier + "+";
+            keys += modifier + "+";
         }
         keys = keys + text;
         System.out.println(keys);
