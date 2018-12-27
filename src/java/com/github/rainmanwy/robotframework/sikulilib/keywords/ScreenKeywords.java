@@ -987,15 +987,18 @@ public class ScreenKeywords {
                 r.highlight(1);
             }
             else if(direction.equals("left")){
-                r = new_region.left(height * number_of_times_to_repeat);
+                r = new_region.left(width * number_of_times_to_repeat);
+                r.highlight(1);
             }
             else if(direction.equals("right")){
-                r = new_region.right(height * number_of_times_to_repeat);
+                r = new_region.right(width * number_of_times_to_repeat);
+                r.highlight(1);
             }
             else{
                 r = new_region;
             }
-            System.out.println(r);
+            
+            r.highlight(2);
             result[0] = r.x;
             result[1] = r.y;
             result[2] = r.w;
@@ -1020,12 +1023,7 @@ public class ScreenKeywords {
         int h = Integer.parseInt(reg.get(3).toString());
 
         Region region = new Region(x,y,w,h);
-        if (region != null) {
-            return region.text();
-        } else {
-            System.out.println("error region test: " + reg);
-            return "ERROR";
-        }
+        return region.text();
     }
 
     @RobotKeyword("Set ROI"
@@ -1067,5 +1065,261 @@ public class ScreenKeywords {
         retval[3] = String.valueOf(region.getW());
         retval[4] = String.valueOf(region.getH());
         return retval;
+    }
+
+    @RobotKeyword("Double Click On Region" + 
+                "\n there's no offset to be configured" +
+                "\n works with the keyword Get Extended Region From")    
+    @ArgumentNames("region")
+    public void doubleClickOnRegion(ArrayList<Object> region) throws Exception{
+        int x = Integer.parseInt(region.get(0).toString());
+        int y = Integer.parseInt(region.get(1).toString()); 
+        int w = Integer.parseInt(region.get(2).toString()); 
+        int h = Integer.parseInt(region.get(3).toString()); 
+        
+        try{
+            Region _region = new Region(x,y,w,h);
+            _region.doubleClick();
+        }
+        catch(Exception e){
+            throw new Exception("error:" + e);
+        }
+    }    
+
+    @RobotKeyword("Click On Region" +
+                "\n there's no offset to be configured" +
+                "\n works with the keyword Get Extended Region From")
+    @ArgumentNames("region")
+    public void clickOnRegion(ArrayList<Object> region) throws Exception{
+        int x = Integer.parseInt(region.get(0).toString());
+        int y = Integer.parseInt(region.get(1).toString()); 
+        int w = Integer.parseInt(region.get(2).toString()); 
+        int h = Integer.parseInt(region.get(3).toString()); 
+        
+        try{
+            Region _region = new Region(x,y,w,h);
+            _region.click();
+        }
+        catch(Exception e){
+            throw new Exception("error");
+        }
+    }
+
+    @RobotKeyword("Double Click On Match" +
+                "\n there's no offset to be configured" + 
+                "\n works with the keyword Return Match From Region")    
+    @ArgumentNames("match")
+    public void doubleClickOnMatch(ArrayList<Object> match) throws Exception{
+        int x = Integer.parseInt(match.get(0).toString());
+        int y = Integer.parseInt(match.get(1).toString()); 
+        int w = Integer.parseInt(match.get(2).toString()); 
+        int h = Integer.parseInt(match.get(3).toString());  
+        double sc = Double.parseDouble(match.get(4).toString());
+        try{
+            Region reg = new Region(x,y,w,h);
+            Match _el = new Match(reg, sc);
+            screen.doubleClick(_el);
+        }catch (FindFailed e){
+            capture();
+            throw new FindFailed("not found  ");
+        }
+    }
+
+    @RobotKeyword("Click On Match" +
+                "\n there's no offset to be configured" +
+                "\n works with the keyword Return Match From Region")    
+    @ArgumentNames("match")
+    public void clickOnMatch(ArrayList<Object> match) throws Exception{
+        int x = Integer.parseInt(match.get(0).toString());
+        int y = Integer.parseInt(match.get(1).toString()); 
+        int w = Integer.parseInt(match.get(2).toString()); 
+        int h = Integer.parseInt(match.get(3).toString());  
+        double sc = Double.parseDouble(match.get(4).toString());
+        try{
+            Region reg = new Region(x,y,w,h);
+            Match el = new Match(reg, sc);
+            screen.click(el);
+        }catch (FindFailed e){
+            capture();
+            throw new FindFailed("not found ");
+        }
+    }
+
+    @RobotKeyword("Return Match From Region" + 
+                "\n expect a region (from keyword Get Extended Region From) and a target to be search for" +
+                "\n returns the target as a object (string)")
+    @ArgumentNames({"region", "target"})
+    public ArrayList<Object> returnMatchFromRegion(ArrayList<Object> region, String image)throws Exception{
+        
+        ArrayList<Object> ob = new ArrayList<Object>();
+        int x = Integer.parseInt(region.get(0).toString());
+        int y = Integer.parseInt(region.get(1).toString()); 
+        int w = Integer.parseInt(region.get(2).toString()); 
+        int h = Integer.parseInt(region.get(3).toString()); 
+               
+        System.out.print("x: " + x);
+        System.out.print("x: " + y);
+        System.out.print("x: " + w);
+        System.out.print("x: " + h);
+
+        Region new_region = new Region(x,y,w,h);
+        
+        try{
+            Match el = new_region.find(image);
+            ob.add(el.x);
+            ob.add(el.y);
+            ob.add(el.w);
+            ob.add(el.h);
+            ob.add(el.getScore());
+            return ob;
+        }
+        catch (FindFailed e){
+            return ob;
+        }
+    }
+
+    @RobotKeyword("From Region Jump To" + 
+                "\n expect a region (from keyword Get Extended Region From)")
+    @ArgumentNames({"region", "direction", "jumps"})
+    public ArrayList<Object> fromRegionJumpTo(ArrayList<Object> region, String direction, int jumps){
+        ArrayList<Object> result = new ArrayList<Object>();
+
+        int x = Integer.parseInt(region.get(0).toString()); 
+        int y = Integer.parseInt(region.get(1).toString()); 
+        int w = Integer.parseInt(region.get(2).toString()); 
+        int h = Integer.parseInt(region.get(3).toString()); 
+                
+        Region original = new Region(x,y,w,h);
+        Region r = null;
+        Location l = new Location(original.x, original.y);
+        int pixel = 1;
+        System.out.print("location: " + l);
+
+        if (direction.equals("below")){
+            l.translate(0, (original.h * jumps)+ (pixel * jumps));
+            r = new Region(l.x, l.y, w, h);
+            System.out.print("location after: " + l);
+        }
+        else if(direction.equals("above")){
+            l.translate(0, -original.h * jumps);
+            r = new Region(l.x, l.y, w, h);
+        }
+        else if(direction.equals("left")){
+            r = new Region(original.w* -jumps, 0, w , h);
+        }
+        else if(direction.equals("right")){
+            r = new Region(original.w * jumps, 0, w , h);
+        }
+        else{
+            r = original;
+        }       
+        
+        result.add(r.x);
+        result.add(r.y);
+        result.add(r.w);
+        result.add(r.h);
+        
+        return result;
+    }
+
+    @RobotKeyword("Get Extended Region From Region" + 
+                "\n Extended the given image creating a region above, below, in the left side or on the right, with the same height and width" + 
+                "\n The height and width can change using the multiplier @number_of_times_to_repeat " +
+                "\n If 2 is given and direction = below the new region will have twice the height of the orignal and will be located right below it")
+    @ArgumentNames({"image", "direction", "number_of_times_to_repeat"})
+    public ArrayList<Object> getExtendedRegionFromRegion(ArrayList<Object> region, String direction, int number_of_times_to_repeat) throws Exception {
+       
+        int x = Integer.parseInt(region.get(0).toString()); 
+        int y = Integer.parseInt(region.get(1).toString()); 
+        int w = Integer.parseInt(region.get(2).toString()); 
+        int h = Integer.parseInt(region.get(3).toString()); 
+
+        try{
+            Region new_region = new Region(x,y,w,h);
+            int height = new_region.h;
+            int width = new_region.w;
+                        
+            Region r = null;
+            ArrayList<Object> result = new ArrayList<Object>();
+            
+            if (direction.equals("below")){
+                r = new_region.below(height * number_of_times_to_repeat);
+            }
+            else if(direction.equals("above")){
+                r = new_region.above(height * number_of_times_to_repeat);
+            }
+            else if(direction.equals("left")){
+                r = new_region.left(width * number_of_times_to_repeat);
+            }
+            else if(direction.equals("right")){
+                r = new_region.right(width * number_of_times_to_repeat);
+            }
+            else if(direction.equals("original")){
+                r = new_region;
+            }
+            else{
+                throw new Exception("direction has a invalid value");
+            }
+        
+        result.add(r.x);
+        result.add(r.y);
+        result.add(r.w);
+        result.add(r.h);               
+
+        System.out.println("[log] Get extended region from region result: " + result);
+        return result;
+        }
+        catch (Exception e) {
+            capture();
+            throw new Exception("Error: " + e);    
+        }
+    }
+
+        @RobotKeyword("Get extended region from image" + 
+                "\n Extended the given image creating a region above, below, in the left side or on the right, with the same height and width" + 
+                "\n The height and width can change using the multiplier @number_of_times_to_repeat " +
+                "\n If 2 is given and direction = below the new region will have twice the height of the orignal and will be located right below it")
+    @ArgumentNames({"image", "direction", "number_of_times_to_repeat"})
+    public int[] getExtendedRegionFromImage(String image, String direction, int number_of_times_to_repeat) throws Exception {
+            try{
+                Match match = screen.find(image);
+                Region new_region = new Region(match);
+                                            
+                Region r = null;
+                int [] result = new int[4];
+                
+                if (direction.equals("below")){
+                    r = new_region.below(new_region.h * number_of_times_to_repeat);
+                }
+                else if(direction.equals("above")){
+                    r = new_region.above(new_region.h * number_of_times_to_repeat);
+                }
+                else if(direction.equals("left")){
+                    r = new_region.left(new_region.w * number_of_times_to_repeat);
+                }
+                else if(direction.equals("right")){
+                    r = new_region.right(new_region.w * number_of_times_to_repeat);
+                }
+                else if(direction.equals("original")){
+                    r = new_region;
+                }
+                else{
+                    throw new Exception("direction has a invalid value");
+                }
+            
+            r.highlight(2);
+            r.saveScreenCapture();
+            result[0] = r.x;
+            result[1] = r.y;
+            result[2] = r.w;
+            result[3] = r.h;             
+
+            System.out.println("[log] Get extended region from image result: " + result);
+            return result;
+        }
+        catch (FindFailed e) {
+            capture();
+            throw new ScreenOperationException("Extended image not found on the screen "+image+" failed" + e.getMessage(), e);    
+        }      
     }
 }
