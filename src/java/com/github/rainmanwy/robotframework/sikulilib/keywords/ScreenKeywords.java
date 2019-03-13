@@ -1023,6 +1023,7 @@ public class ScreenKeywords {
         int h = Integer.parseInt(reg.get(3).toString());
 
         Region region = new Region(x,y,w,h);
+        
         return region.text();
     }
 
@@ -1148,6 +1149,7 @@ public class ScreenKeywords {
     @RobotKeyword("Return Match From Region" + 
                 "\n expect a region (from keyword Get Extended Region From) and a target to be search for" +
                 "\n returns the target as a object (string)")
+
     @ArgumentNames({"region", "target"})
     public ArrayList<Object> returnMatchFromRegion(ArrayList<Object> region, String image)throws Exception{
         
@@ -1181,8 +1183,10 @@ public class ScreenKeywords {
     @RobotKeyword("From Region Jump To" + 
                 "\n expect a region (from keyword Get Extended Region From)")
     @ArgumentNames({"region", "direction", "jumps"})
-    public ArrayList<Object> fromRegionJumpTo(ArrayList<Object> region, String direction, int jumps){
+    public ArrayList<Object> fromRegionJumpTo(ArrayList<Object> region, String direction, String jumps) throws Exception {
         ArrayList<Object> result = new ArrayList<Object>();
+        
+        int number = Integer.parseInt(jumps);	
 
         int x = Integer.parseInt(region.get(0).toString()); 
         int y = Integer.parseInt(region.get(1).toString()); 
@@ -1196,39 +1200,46 @@ public class ScreenKeywords {
         System.out.print("location: " + l);
 
         if (direction.equals("below")){
-            l.translate(0, (original.h * jumps)+ (pixel * jumps));
-            r = new Region(l.x, l.y, w, h);
-            System.out.print("location after: " + l);
+            l.translate(0, (original.h * number) + (pixel * number));
+            r = new Region(l.x + 2 , l.y + 2 , w - 2, h - 2);
         }
         else if(direction.equals("above")){
-            l.translate(0, -original.h * jumps);
-            r = new Region(l.x, l.y, w, h);
+            l.translate(0, -original.h * number);
+            r = new Region(l.x + 2, l.y + 2, w - 2, h - 2);
         }
         else if(direction.equals("left")){
-            r = new Region(original.w* -jumps, 0, w , h);
+            l.translate((-original.w * number) + (pixel * number), 0);
+            r = new Region(l.x, l.y, w, h);
         }
         else if(direction.equals("right")){
-            r = new Region(original.w * jumps, 0, w , h);
+            l.translate((original.w * number) + (pixel * number), 0);
+            r = new Region(l.x, l.y, w, h);
         }
         else{
-            r = original;
-        }       
+            throw new Exception("direction has a invalid value");
+        }  
         
         result.add(r.x);
         result.add(r.y);
         result.add(r.w);
         result.add(r.h);
         
+        //r.highlight(2);
         return result;
     }
 
+
+    //TODO: overload where there's original value on arguments
+    
     @RobotKeyword("Get Extended Region From Region" + 
                 "\n Extended the given image creating a region above, below, in the left side or on the right, with the same height and width" + 
                 "\n The height and width can change using the multiplier @number_of_times_to_repeat " +
                 "\n If 2 is given and direction = below the new region will have twice the height of the orignal and will be located right below it")
+
     @ArgumentNames({"image", "direction", "number_of_times_to_repeat"})
-    public ArrayList<Object> getExtendedRegionFromRegion(ArrayList<Object> region, String direction, int number_of_times_to_repeat) throws Exception {
-       
+    public ArrayList<Object> getExtendedRegionFromRegion(ArrayList<Object> region, String direction, String number_of_times_to_repeat) throws Exception {
+        int number = Integer.parseInt(number_of_times_to_repeat);	
+
         int x = Integer.parseInt(region.get(0).toString()); 
         int y = Integer.parseInt(region.get(1).toString()); 
         int w = Integer.parseInt(region.get(2).toString()); 
@@ -1243,16 +1254,16 @@ public class ScreenKeywords {
             ArrayList<Object> result = new ArrayList<Object>();
             
             if (direction.equals("below")){
-                r = new_region.below(height * number_of_times_to_repeat);
+                r = new_region.below(height * number);
             }
             else if(direction.equals("above")){
-                r = new_region.above(height * number_of_times_to_repeat);
+                r = new_region.above(height * number);
             }
             else if(direction.equals("left")){
-                r = new_region.left(width * number_of_times_to_repeat);
+                r = new_region.left(width * number);
             }
             else if(direction.equals("right")){
-                r = new_region.right(width * number_of_times_to_repeat);
+                r = new_region.right(width * number);
             }
             else if(direction.equals("original")){
                 r = new_region;
@@ -1275,13 +1286,15 @@ public class ScreenKeywords {
         }
     }
 
-        @RobotKeyword("Get extended region from image" + 
-                "\n Extended the given image creating a region above, below, in the left side or on the right, with the same height and width" + 
-                "\n The height and width can change using the multiplier @number_of_times_to_repeat " +
-                "\n If 2 is given and direction = below the new region will have twice the height of the orignal and will be located right below it")
+    @RobotKeyword("Get extended region from image" + 
+            "\n Extended the given image creating a region above, below, in the left side or on the right, with the same height and width" + 
+            "\n The height and width can change using the multiplier @number_of_times_to_repeat " +
+            "\n If 2 is given and direction = below the new region will have twice the height of the orignal and will be located right below it")
+
     @ArgumentNames({"image", "direction", "number_of_times_to_repeat"})
-    public int[] getExtendedRegionFromImage(String image, String direction, int number_of_times_to_repeat) throws Exception {
+    public int[] getExtendedRegionFromImage(String image, String direction, String number_of_times_to_repeat) throws Exception {
             try{
+                int number = Integer.parseInt(number_of_times_to_repeat);	
                 Match match = screen.find(image);
                 Region new_region = new Region(match);
                                             
@@ -1289,16 +1302,16 @@ public class ScreenKeywords {
                 int [] result = new int[4];
                 
                 if (direction.equals("below")){
-                    r = new_region.below(new_region.h * number_of_times_to_repeat);
+                    r = new_region.below(new_region.h * number);
                 }
                 else if(direction.equals("above")){
-                    r = new_region.above(new_region.h * number_of_times_to_repeat);
+                    r = new_region.above(new_region.h * number);
                 }
                 else if(direction.equals("left")){
-                    r = new_region.left(new_region.w * number_of_times_to_repeat);
+                    r = new_region.left(new_region.w * number);
                 }
                 else if(direction.equals("right")){
-                    r = new_region.right(new_region.w * number_of_times_to_repeat);
+                    r = new_region.right(new_region.w * number);
                 }
                 else if(direction.equals("original")){
                     r = new_region;
@@ -1307,8 +1320,6 @@ public class ScreenKeywords {
                     throw new Exception("direction has a invalid value");
                 }
             
-            r.highlight(2);
-            r.saveScreenCapture();
             result[0] = r.x;
             result[1] = r.y;
             result[2] = r.w;
