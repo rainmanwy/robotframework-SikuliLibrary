@@ -1,7 +1,16 @@
 package com.github.rainmanwy.robotframework.sikulilib.keywords;
 
+import java.awt.Dialog;
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Map;
+
+import javax.swing.JOptionPane;
+
+import java.util.HashMap;
+import java.util.List;
 
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
@@ -1196,23 +1205,32 @@ public class ScreenKeywords {
         Region original = new Region(x,y,w,h);
         Region r = null;
         Location l = new Location(original.x, original.y);
-        int pixel = 1;
+        
         System.out.print("location: " + l);
 
         if (direction.equals("below")){
-            l.translate(0, (original.h * number) + (pixel * number));
-            r = new Region(l.x + 2 , l.y + 2 , w - 2, h - 2);
+            l.translate(0, (original.h * number));
+            JOptionPane.showMessageDialog(null, "original raw y" + original.y);
+            JOptionPane.showMessageDialog(null, "original ly" + l.y);
+            r = new Region(l.x, l.y, w , h);
+            r.highlight(1);
+            // JOptionPane.showMessageDialog(null, "original.h " + original.h);
+            // JOptionPane.showMessageDialog(null, "translated lx" + l.x);
+            JOptionPane.showMessageDialog(null, "messagem ly" + l.y);
+            // JOptionPane.showMessageDialog(null, "messagem number:" + number);
+            
+           
         }
         else if(direction.equals("above")){
             l.translate(0, -original.h * number);
             r = new Region(l.x + 2, l.y + 2, w - 2, h - 2);
         }
         else if(direction.equals("left")){
-            l.translate((-original.w * number) + (pixel * number), 0);
+            l.translate((-original.w * number),  0);
             r = new Region(l.x, l.y, w, h);
         }
         else if(direction.equals("right")){
-            l.translate((original.w * number) + (pixel * number), 0);
+            l.translate((original.w * number), 0);
             r = new Region(l.x, l.y, w, h);
         }
         else{
@@ -1224,7 +1242,7 @@ public class ScreenKeywords {
         result.add(r.w);
         result.add(r.h);
         
-        //r.highlight(2);
+        
         return result;
     }
 
