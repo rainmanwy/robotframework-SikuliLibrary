@@ -2,15 +2,10 @@ package com.github.rainmanwy.robotframework.sikulilib.keywords;
 
 import java.awt.Dialog;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Map;
+import java.util.*;
 
 import javax.swing.JOptionPane;
 
-import java.util.HashMap;
-import java.util.List;
 
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
@@ -1190,13 +1185,13 @@ public class ScreenKeywords {
     }
 
     @RobotKeyword("From Region Jump To" + 
-                "\n expect a region (from keyword Get Extended Region From)")
-    @ArgumentNames({"region", "direction", "jumps"})
-    public ArrayList<Object> fromRegionJumpTo(ArrayList<Object> region, String direction, String jumps) throws Exception {
+                  "\n expect a region (from keyword Get Extended Region From for example)")
+    @ArgumentNames({"region", "direction", "jumps", "margem"})
+    public ArrayList<Object> fromRegionJumpTo(ArrayList<Object> region, String direction, String jumps, String margem) throws Exception {
         ArrayList<Object> result = new ArrayList<Object>();
         
-        int number = Integer.parseInt(jumps);	
-
+        int Jumps = Integer.parseInt(jumps);	
+        int Margem = Integer.parseInt(margem);
         int x = Integer.parseInt(region.get(0).toString()); 
         int y = Integer.parseInt(region.get(1).toString()); 
         int w = Integer.parseInt(region.get(2).toString()); 
@@ -1204,34 +1199,25 @@ public class ScreenKeywords {
                 
         Region original = new Region(x,y,w,h);
         Region r = null;
-        Location l = new Location(original.x, original.y);
-        
-        System.out.print("location: " + l);
+        Location location = new Location(original.x, original.y);
+       
 
         if (direction.equals("below")){
-            l.translate(0, (original.h * number));
-            JOptionPane.showMessageDialog(null, "original raw y" + original.y);
-            JOptionPane.showMessageDialog(null, "original ly" + l.y);
-            r = new Region(l.x, l.y, w , h);
-            r.highlight(1);
+            location.translate(0, ((original.h * Jumps) - (Jumps * Margem)));
+            r = new Region(location.x, location.y, w , h );
             // JOptionPane.showMessageDialog(null, "original.h " + original.h);
-            // JOptionPane.showMessageDialog(null, "translated lx" + l.x);
-            JOptionPane.showMessageDialog(null, "messagem ly" + l.y);
-            // JOptionPane.showMessageDialog(null, "messagem number:" + number);
-            
-           
         }
         else if(direction.equals("above")){
-            l.translate(0, -original.h * number);
-            r = new Region(l.x + 2, l.y + 2, w - 2, h - 2);
+            location.translate(0, -((original.h * Jumps) - (Jumps * Margem)));
+            r = new Region(location.x, location.y, w , h );
         }
         else if(direction.equals("left")){
-            l.translate((-original.w * number),  0);
-            r = new Region(l.x, l.y, w, h);
+            location.translate(-((original.h * Jumps) - (Jumps * Margem)), 0);
+            r = new Region(location.x, location.y, w , h );
         }
         else if(direction.equals("right")){
-            l.translate((original.w * number), 0);
-            r = new Region(l.x, l.y, w, h);
+            location.translate(((original.h * Jumps) - (Jumps * Margem)), 0);
+            r = new Region(location.x, location.y, w , h );
         }
         else{
             throw new Exception("direction has a invalid value");
@@ -1241,8 +1227,7 @@ public class ScreenKeywords {
         result.add(r.y);
         result.add(r.w);
         result.add(r.h);
-        
-        
+                
         return result;
     }
 
@@ -1305,9 +1290,9 @@ public class ScreenKeywords {
     }
 
     @RobotKeyword("Get extended region from image" + 
-            "\n Extended the given image creating a region above, below, in the left side or on the right, with the same height and width" + 
+            "\n Extended the given image creating a new region above, below, on the left or on the right side, with the same height and width" + 
             "\n The height and width can change using the multiplier @number_of_times_to_repeat " +
-            "\n If 2 is given and direction = below the new region will have twice the height of the orignal and will be located right below it")
+            "\n Ex: If 2 is given and direction = below the new region will have twice the height of the orignal and will be located right below it")
 
     @ArgumentNames({"image", "direction", "number_of_times_to_repeat"})
     public int[] getExtendedRegionFromImage(String image, String direction, String number_of_times_to_repeat) throws Exception {

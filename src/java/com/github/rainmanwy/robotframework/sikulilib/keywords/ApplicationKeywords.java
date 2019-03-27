@@ -23,7 +23,7 @@ public class ApplicationKeywords {
 
     @RobotKeyword("Close application")
     @ArgumentNames({"name"})
-    public boolean closeApplication(String name) {
+    public Boolean closeApplication(String name) {
         return App.close(name);
     }
 }
