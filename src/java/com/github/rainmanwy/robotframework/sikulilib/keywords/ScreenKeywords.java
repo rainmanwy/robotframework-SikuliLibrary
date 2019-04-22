@@ -1,13 +1,7 @@
 package com.github.rainmanwy.robotframework.sikulilib.keywords;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Map;
-
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import org.robotframework.javalib.annotation.ArgumentNames;
 import org.robotframework.javalib.annotation.RobotKeyword;
@@ -829,12 +823,29 @@ public class ScreenKeywords {
 
     }
 
+    @RobotKeyword("Image Count"
+            + "\n Count how many times the same picture is detected in screen."
+            + "\n\n Examples:"
+            + "\n | ${image_cnt}=  |  Image Count  | test.png  |")
+    @ArgumentNames({"steps", "image="})
+    public int imageCount(String image){
+        int count = 0;
+        Iterator<Match> matches;
+        try{
+            matches = region.findAll(get_pattern(image));
+        }catch(FindFailed e){
+            return 0;
+        }
+        while(matches.hasNext()) count++;
+        return count;
+    }
+
     @RobotKeyword("Exists"
             + "\n\n Check whether image exists in screen"
             + "\n @image: expected image in screen"
             + "\n @timeout: wait seconds"
             + "\n\n Examples:"
-            + "\n | ${is_exist}  | Exists | image.png | 0 |")
+            + "\n | ${is_exist}=  | Exists | image.png | 0 |")
     @ArgumentNames({"image", "timeout="})
     public Boolean exists(String image, int timeout) {
         Match match = region.exists(get_pattern(image), timeout);
