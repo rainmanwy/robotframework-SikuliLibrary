@@ -41,7 +41,7 @@ public class ScreenKeywords {
         return region;
     }
 
-    private Pattern get_pattern(String locator) {
+    private Pattern getPattern(String locator) {
         /**
          * Parse locator string. It can be either of the following:
          * - Image.png
@@ -115,7 +115,7 @@ public class ScreenKeywords {
     public int[] click(String image) throws Exception{
         wait(image, Double.toString(this.timeout));
         try {
-            region.click(get_pattern(image));
+            region.click(getPattern(image));
             Match match = region.getLastMatch();
             int[] reg = new int[4];
             reg[0] = match.getX();
@@ -200,9 +200,9 @@ public class ScreenKeywords {
     public int[] clickNth(String image, int index, Boolean sortByColumn) throws Exception {
         List<Match> matches = null;
         if (sortByColumn) {
-            matches = region.findAllByColumn(get_pattern(image));
+            matches = region.findAllByColumn(getPattern(image));
         } else{
-            matches = region.findAllByRow(get_pattern(image));
+            matches = region.findAllByRow(getPattern(image));
         }
         Match match = matches.get(index);
         capture(match);
@@ -225,7 +225,7 @@ public class ScreenKeywords {
     public int[] doubleClick(String image) throws Exception{
         wait(image, Double.toString(this.timeout));
         try {
-            region.doubleClick(get_pattern(image));
+            region.doubleClick(getPattern(image));
         }
         catch (FindFailed e) {
             throw new ScreenOperationException("Click "+image+" failed"+e.getMessage(), e);
@@ -243,9 +243,10 @@ public class ScreenKeywords {
     @RobotKeywordOverload
     public int[] doubleClick(String image, int xOffset, int yOffset) throws Exception{
         Match match = wait(image, Double.toString(this.timeout));
+        Location center = match.getCenter();
         try {
-            int newX = match.getX() + xOffset;
-            int newY = match.getY() + yOffset;
+            int newX = center.getX() + xOffset;
+            int newY = center.getY() + yOffset;
             Location newLocation = new Location(newX, newY);
             region.doubleClick(newLocation);
         }
@@ -266,7 +267,7 @@ public class ScreenKeywords {
     public int[] rightClick(String image) throws Exception{
         wait(image, Double.toString(this.timeout));
         try {
-            region.rightClick(get_pattern(image));
+            region.rightClick(getPattern(image));
         }
         catch (FindFailed e) {
             throw new ScreenOperationException("Click "+image+" failed"+e.getMessage(), e);
@@ -282,23 +283,23 @@ public class ScreenKeywords {
 
     private Match wait(String image, String timeout) throws TimeoutException {
         try {
-            Match match = region.wait(get_pattern(image), Double.parseDouble(timeout));
+            Match match = region.wait(getPattern(image), Double.parseDouble(timeout));
             capture(match);
             return match;
         }
         catch(FindFailed e) {
             capture(region);
-            throw new TimeoutException("Timeout happend, could not find "+get_pattern(image).toString(), e);
+            throw new TimeoutException("Timeout happend, could not find "+ getPattern(image).toString(), e);
         }
     }
 
     private Match find(String image) {
         try {
-            Match match = region.find(get_pattern(image));
+            Match match = region.find(getPattern(image));
             capture(match);
             return match;
         } catch (FindFailed e) {
-            System.out.println("Could not find " + get_pattern(image).toString());
+            System.out.println("Could not find " + getPattern(image).toString());
             return null;
         }
     }
@@ -314,7 +315,7 @@ public class ScreenKeywords {
             + "\n Wait until image not in screen")
     @ArgumentNames({"image", "timeout"})
     public void waitUntilScreenNotContain(String image, String timeout) throws TimeoutException {
-        boolean result = region.waitVanish(get_pattern(image), Double.parseDouble(timeout));
+        boolean result = region.waitVanish(getPattern(image), Double.parseDouble(timeout));
         capture(region);
         if (!result) {
             throw new TimeoutException(image+" is still in screen");
@@ -405,8 +406,8 @@ public class ScreenKeywords {
     public void clickIn(String areaImage, String targetImage) throws Exception {
         Match match = wait(areaImage, Double.toString(this.timeout));
         System.out.println(areaImage + " is found!");
-        capture(match.find(get_pattern(targetImage)));
-        match.click(get_pattern(targetImage));
+        capture(match.find(getPattern(targetImage)));
+        match.click(getPattern(targetImage));
     }
 
     @RobotKeyword("Double click in. \nDouble click target image in area image.")
@@ -414,8 +415,8 @@ public class ScreenKeywords {
     public void doubleClickIn(String areaImage, String targetImage) throws Exception {
         Match match = wait(areaImage, Double.toString(this.timeout));
         System.out.println(areaImage + " is found!");
-        capture(match.find(get_pattern(targetImage)));
-        match.doubleClick(get_pattern(targetImage));
+        capture(match.find(getPattern(targetImage)));
+        match.doubleClick(getPattern(targetImage));
     }
 
     @RobotKeyword("Right click in. \nRight click target image in area image.")
@@ -423,8 +424,8 @@ public class ScreenKeywords {
     public void rightClickIn(String areaImage, String targetImage) throws Exception {
         Match match = wait(areaImage, Double.toString(this.timeout));
         System.out.println(areaImage + " is found!");
-        capture(match.find(get_pattern(targetImage)));
-        match.rightClick(get_pattern(targetImage));
+        capture(match.find(getPattern(targetImage)));
+        match.rightClick(getPattern(targetImage));
     }
 
     private String capture() {
@@ -487,7 +488,7 @@ public class ScreenKeywords {
     public void highlight(String image, Integer secs) throws Exception{
         Match match = null;
         if (highlightMap.containsKey(image)==false) {
-            match = region.find(get_pattern(image));
+            match = region.find(getPattern(image));
             if (secs != null) {
                 match.highlight(secs);
             } else {
@@ -629,7 +630,7 @@ public class ScreenKeywords {
     @ArgumentNames({"image="})
     public void mouseMove(String image) throws Exception{
         Match match = wait(image, Double.toString(this.timeout));
-        int result = match.mouseMove(get_pattern(image));
+        int result = match.mouseMove(getPattern(image));
         if (result == 0) {
             throw new ScreenOperationException("Failed to move mouse to "+image);
         }
@@ -704,7 +705,7 @@ public class ScreenKeywords {
     @ArgumentNames({"steps", "image="})
     public void wheelUp(int steps, String image) throws Exception{
         wait(image, Double.toString(this.timeout));
-        region.wheel(get_pattern(image), Button.WHEEL_UP, steps);
+        region.wheel(getPattern(image), Button.WHEEL_UP, steps);
     }
 
     @RobotKeywordOverload
@@ -720,7 +721,7 @@ public class ScreenKeywords {
     @ArgumentNames({"steps", "image="})
     public void wheelDown(int steps, String image) throws Exception{
         wait(image, Double.toString(this.timeout));
-        region.wheel(get_pattern(image), Button.WHEEL_DOWN, steps);
+        region.wheel(getPattern(image), Button.WHEEL_DOWN, steps);
     }
 
     @RobotKeywordOverload
@@ -762,8 +763,8 @@ public class ScreenKeywords {
     public void waitForImage(String wantedImage, String notWantedImage, int timeout) throws Exception {
         Date begineTime = new Date();
         while (System.currentTimeMillis() - begineTime.getTime() < timeout*1000) {
-            Match wantedMatch = region.exists(get_pattern(wantedImage), 0);
-            Match notWantedMatch = region.exists(get_pattern(notWantedImage), 0);
+            Match wantedMatch = region.exists(getPattern(wantedImage), 0);
+            Match notWantedMatch = region.exists(getPattern(notWantedImage), 0);
             if (wantedMatch != null) {
                 return;
             } else if ( notWantedMatch != null ) {
@@ -798,7 +799,7 @@ public class ScreenKeywords {
 
             for (String wantedImage : expectedImages)
             {
-                Match wantedMatch = region.exists(get_pattern(wantedImage), 0);
+                Match wantedMatch = region.exists(getPattern(wantedImage), 0);
 
                 if (wantedMatch != null) {
                     return wantedImage;
@@ -806,7 +807,7 @@ public class ScreenKeywords {
             }
 
             for (String notWantedImage : notExpectedImages) {
-                Match notWantedMatch = region.exists(get_pattern(notWantedImage), 0);
+                Match notWantedMatch = region.exists(getPattern(notWantedImage), 0);
 
                 if (notWantedMatch != null) {
                     capture();
@@ -832,7 +833,7 @@ public class ScreenKeywords {
         int count = 0;
         Iterator<Match> matches;
         try{
-            matches = region.findAll(get_pattern(image));
+            matches = region.findAll(getPattern(image));
         }catch(FindFailed e){
             return 0;
         }
@@ -848,7 +849,7 @@ public class ScreenKeywords {
             + "\n | ${is_exist}=  | Exists | image.png | 0 |")
     @ArgumentNames({"image", "timeout="})
     public Boolean exists(String image, int timeout) {
-        Match match = region.exists(get_pattern(image), timeout);
+        Match match = region.exists(getPattern(image), timeout);
         if (match != null) {
             return true;
         }
@@ -914,14 +915,14 @@ public class ScreenKeywords {
     public int[] getImageCoordinates(String image,  ArrayList<Object> coordinates) throws Exception {
         Match match = null;
         if (coordinates.isEmpty()) {
-            match = ScreenKeywords.getScreen().find(get_pattern(image));
+            match = ScreenKeywords.getScreen().find(getPattern(image));
         } else {
             int x = Integer.parseInt(coordinates.get(0).toString());
             int y = Integer.parseInt(coordinates.get(1).toString());
             int w = Integer.parseInt(coordinates.get(2).toString());
             int h = Integer.parseInt(coordinates.get(3).toString());
             Region region = new Region(x, y, w, h);
-            match = region.find(get_pattern(image));
+            match = region.find(getPattern(image));
         }
 
         int [] image_coordinates = new int[4];
@@ -945,7 +946,7 @@ public class ScreenKeywords {
 
         Match match = null;
         try{
-            match = screen.find(get_pattern(image));
+            match = screen.find(getPattern(image));
             Region new_region = new Region(match);
             int height = new_region.h;
             int width = new_region.w;
