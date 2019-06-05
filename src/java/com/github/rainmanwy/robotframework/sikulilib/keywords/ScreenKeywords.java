@@ -837,7 +837,10 @@ public class ScreenKeywords {
         }catch(FindFailed e){
             return 0;
         }
-        while(matches.hasNext()) count++;
+        while(matches.hasNext()){
+            count++;
+            matches.next();
+        }
         return count;
     }
 
