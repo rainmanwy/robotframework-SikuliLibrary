@@ -248,10 +248,10 @@ class SikuliLibrary(object):
             return self.remote.get_keyword_documentation(name)
         return KEYWORDS[name]['doc']
 
-    def run_keyword(self, name, arguments=[], kwargs={}):
+    def run_keyword(self, name, arguments=[]):
         if name == 'start_sikuli_process':
             return self.start_sikuli_process(*arguments)
-        return self.remote.run_keyword(name, arguments, kwargs)
+        return self.remote.run_keyword(name, arguments, None)
 
     def _stop_thread(self, timeout):
         def stop():

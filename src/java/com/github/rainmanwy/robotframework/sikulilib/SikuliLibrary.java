@@ -10,6 +10,7 @@ import com.github.rainmanwy.robotframework.sikulilib.utils.CaptureFolder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Wang Yang on 2015/8/19.
@@ -39,10 +40,30 @@ public class SikuliLibrary implements KeywordDocumentationRepository, RobotJavaL
         return this.annotationLibrary.runKeyword(keywordName, toStrings(args));
     }
 
+    public Object runKeyword(String keywordName, Object[] args, Map<String, Object> kwargs)
+    {
+        Object[] newArgs = combineArgsAndKwargs(args, kwargs);
+        return runKeyword(keywordName, newArgs);
+    }
+
     @Override
     public String[] getKeywordNames()
     {
         return  this.annotationLibrary.getKeywordNames();
+    }
+
+    private Object[] combineArgsAndKwargs(Object[] args, Map<String, Object> kwargs) {
+        if (kwargs == null) return args;
+
+        Object[] newArgs = new Object[args.length+kwargs.size()];
+        for (int i = 0; i < args.length; i++) newArgs[i] = args[i];
+
+        int index = args.length;
+        for (String key : kwargs.keySet()) {
+            newArgs[index] = kwargs.get(key);
+            index++;
+        }
+        return newArgs;
     }
 
     private Object[] toStrings(Object[] args) {
