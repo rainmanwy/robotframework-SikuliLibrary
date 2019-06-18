@@ -1151,8 +1151,8 @@ public class ScreenKeywords {
     }
 
     @RobotKeyword("Return Match From Region" + 
-                "\n expect a region (from keyword Get Extended Region From) and a target to be search for" +
-                "\n returns the target as a object (string)")
+                "\n expect a region (from keyword Get Extended Region From) and a target to be search for (an image.png)" +
+                "\n returns the target as a object (string), it can be used with Click On Match keywords")
 
     @ArgumentNames({"region", "target"})
     public ArrayList<Object> returnMatchFromRegion(ArrayList<Object> region, String image)throws Exception{
@@ -1185,7 +1185,11 @@ public class ScreenKeywords {
     }
 
     @RobotKeyword("From Region Jump To" + 
-                  "\n expect a region (from keyword Get Extended Region From for example)")
+                  "\n Create a region and translate it related to the given region, the created region will have the exactly same height and width as the passed one " + 
+                  "\n ${jumps} = number of 'jumps' to move, like on a chess game, jumps will be the number of squares a piece moves " + 
+                  "\n ${direction} = | below | above | left | right | " +
+                  "\n ${margem} = add a space between jumps, must be >= 1 " + 
+                  "\n |${translated_region} =    |    From Region Jump To  |  ${original_region}  |    below   |   4   |    1   |")
     @ArgumentNames({"region", "direction", "jumps", "margem"})
     public ArrayList<Object> fromRegionJumpTo(ArrayList<Object> region, String direction, String jumps, String margem) throws Exception {
         ArrayList<Object> result = new ArrayList<Object>();
@@ -1204,19 +1208,18 @@ public class ScreenKeywords {
 
         if (direction.equals("below")){
             location.translate(0, ((original.h * Jumps) - (Jumps * Margem)));
-            r = new Region(location.x, location.y, w , h );
-            // JOptionPane.showMessageDialog(null, "original.h " + original.h);
+            r = new Region(location.x, location.y, w , h );           
         }
         else if(direction.equals("above")){
             location.translate(0, -((original.h * Jumps) - (Jumps * Margem)));
             r = new Region(location.x, location.y, w , h );
         }
         else if(direction.equals("left")){
-            location.translate(-((original.h * Jumps) - (Jumps * Margem)), 0);
+            location.translate(-((original.w * Jumps) + (Jumps * Margem)), 0);           
             r = new Region(location.x, location.y, w , h );
         }
         else if(direction.equals("right")){
-            location.translate(((original.h * Jumps) - (Jumps * Margem)), 0);
+            location.translate(((original.w * Jumps) + (Jumps * Margem)), 0);
             r = new Region(location.x, location.y, w , h );
         }
         else{
@@ -1230,14 +1233,12 @@ public class ScreenKeywords {
                 
         return result;
     }
-
-
-    //TODO: overload where there's original value on arguments
     
     @RobotKeyword("Get Extended Region From Region" + 
                 "\n Extended the given image creating a region above, below, in the left side or on the right, with the same height and width" + 
                 "\n The height and width can change using the multiplier @number_of_times_to_repeat " +
-                "\n If 2 is given and direction = below the new region will have twice the height of the orignal and will be located right below it")
+                "\n If 2 is given and direction = below the new region will have twice the height of the orignal and will be located right below it" + 
+                "\n |${below_region} =    |    Get Extended Region From Region  |  ${another_region}  |    below   |   1   |")
 
     @ArgumentNames({"image", "direction", "number_of_times_to_repeat"})
     public ArrayList<Object> getExtendedRegionFromRegion(ArrayList<Object> region, String direction, String number_of_times_to_repeat) throws Exception {
@@ -1289,10 +1290,13 @@ public class ScreenKeywords {
         }
     }
 
-    @RobotKeyword("Get extended region from image" + 
+    @RobotKeyword("Get Extended Region From Image" + 
             "\n Extended the given image creating a new region above, below, on the left or on the right side, with the same height and width" + 
             "\n The height and width can change using the multiplier @number_of_times_to_repeat " +
-            "\n Ex: If 2 is given and direction = below the new region will have twice the height of the orignal and will be located right below it")
+            "\n If orginal if giver as arguments, the region will be exactly the same location as the image, last argument is ignored " + 
+            "\n Ex: If 2 is given and direction = below the new region will have twice the height of the given image and will be located right below it" + 
+            "\n |${region} =    |    Get Extended Region From Image  |  image.png  |    below   |   1   |" +
+            "\n |${region} =    |    Get Extended Region From Image  |  image.png  |    original   |   1 #this argument is ignored   |")
 
     @ArgumentNames({"image", "direction", "number_of_times_to_repeat"})
     public int[] getExtendedRegionFromImage(String image, String direction, String number_of_times_to_repeat) throws Exception {
