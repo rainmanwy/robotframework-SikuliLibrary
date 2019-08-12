@@ -110,7 +110,7 @@ public class ScreenKeywords {
     @RobotKeyword("Click"
             + "\n\nClick on an image with similarity and offset."
             + "\nExamples:"
-            + "\n| Set Capture Matched Image | false |")
+            + "\n| Click | hello.png |")
     @ArgumentNames({"image", "xOffset=0", "yOffset=0"})
     public int[] click(String image) throws Exception{
         wait(image, Double.toString(this.timeout));
@@ -151,6 +151,28 @@ public class ScreenKeywords {
         reg[2] = match.getW();
         reg[3] = match.getH();
         return reg;
+    }
+
+    @RobotKeyword("Click Text"
+            + "\n\nClick on text."
+            + "\nExamples:"
+            + "\n| Click Text | Hello |")
+    @ArgumentNames({"text"})
+    public int[] clickText(String text) throws Exception{
+        try {
+            Match match = screen.findText(text);
+            match.click();
+            int[] reg = new int[4];
+            reg[0] = match.getX();
+            reg[1] = match.getY();
+            reg[2] = match.getW();
+            reg[3] = match.getH();
+            return reg;
+        }
+        catch (FindFailed e) {
+            capture();
+            throw new ScreenOperationException("Click text '"+ text+"' failed"+e.getMessage(), e);
+        }
     }
 
     @RobotKeyword("Click region"
