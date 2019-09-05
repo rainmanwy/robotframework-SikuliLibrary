@@ -1,10 +1,8 @@
 package com.github.rainmanwy.robotframework.sikulilib.keywords;
 
-import java.awt.Dialog;
 import java.io.File;
 import java.util.*;
 
-import javax.swing.JOptionPane;
 
 
 import org.robotframework.javalib.annotation.ArgumentNames;
@@ -1337,7 +1335,7 @@ public class ScreenKeywords {
         }
         catch (FindFailed e) {
             capture();
-            throw new ScreenOperationException("Extended image not found on the screen "+image+" failed" + e.getMessage(), e);    
+            throw new ScreenOperationException("Extended image not found on the screen "+ image +" failed" + e.getMessage(), e);    
         }      
     }
 }
