@@ -184,6 +184,7 @@
                                 <!--<include name="prefix*.zip" />-->
                                 <!--</fileset>-->
                                 <!--</unzip>-->
+                                <!--</unzip>-->
                             </tasks>
                         </configuration>
                         <goals>
