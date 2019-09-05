@@ -1000,7 +1000,6 @@ public class ScreenKeywords {
                 r = new_region;
             }
             
-            r.highlight(2);
             result[0] = r.x;
             result[1] = r.y;
             result[2] = r.w;
@@ -1085,7 +1084,7 @@ public class ScreenKeywords {
             _region.doubleClick();
         }
         catch(Exception e){
-            throw new Exception("error:" + e);
+            throw new Exception("error on doubleClickOnRegion, message: " + e);
         }
     }    
 
@@ -1104,7 +1103,7 @@ public class ScreenKeywords {
             _region.click();
         }
         catch(Exception e){
-            throw new Exception("error");
+            throw new Exception("error on clickOnRegion, message: " + e);
         }
     }
 
@@ -1188,7 +1187,7 @@ public class ScreenKeywords {
                   "\n ${direction} = | below | above | left | right | " +
                   "\n ${margem} = add a space between jumps, must be >= 1 " + 
                   "\n |${translated_region} =    |    From Region Jump To  |  ${original_region}  |    below   |   4   |    1   |")
-    @ArgumentNames({"region", "direction", "jumps", "margem"})
+    @ArgumentNames({"region", "direction", "jumps", "margin"})
     public ArrayList<Object> fromRegionJumpTo(ArrayList<Object> region, String direction, String jumps, String margem) throws Exception {
         ArrayList<Object> result = new ArrayList<Object>();
         
@@ -1238,7 +1237,7 @@ public class ScreenKeywords {
                 "\n If 2 is given and direction = below the new region will have twice the height of the orignal and will be located right below it" + 
                 "\n |${below_region} =    |    Get Extended Region From Region  |  ${another_region}  |    below   |   1   |")
 
-    @ArgumentNames({"image", "direction", "number_of_times_to_repeat"})
+    @ArgumentNames({"image", "direction", "number of times to repeat"})
     public ArrayList<Object> getExtendedRegionFromRegion(ArrayList<Object> region, String direction, String number_of_times_to_repeat) throws Exception {
         int number = Integer.parseInt(number_of_times_to_repeat);	
 
@@ -1296,7 +1295,7 @@ public class ScreenKeywords {
             "\n |${region} =    |    Get Extended Region From Image  |  image.png  |    below   |   1   |" +
             "\n |${region} =    |    Get Extended Region From Image  |  image.png  |    original   |   1 #this argument is ignored   |")
 
-    @ArgumentNames({"image", "direction", "number_of_times_to_repeat"})
+    @ArgumentNames({"image", "direction", "number of times to repeat"})
     public int[] getExtendedRegionFromImage(String image, String direction, String number_of_times_to_repeat) throws Exception {
             try{
                 int number = Integer.parseInt(number_of_times_to_repeat);	
