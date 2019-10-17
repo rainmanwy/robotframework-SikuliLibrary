@@ -8,5 +8,5 @@ teste
 .classpath
 .project
 .settings/
-build/
 pom.xml
+build/
