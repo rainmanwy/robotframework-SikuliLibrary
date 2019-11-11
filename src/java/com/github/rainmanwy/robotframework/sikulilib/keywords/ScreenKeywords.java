@@ -119,17 +119,21 @@ public class ScreenKeywords {
         try {
             region.click(getPattern(image));
             Match match = region.getLastMatch();
-            int[] reg = new int[4];
-            reg[0] = match.getX();
-            reg[1] = match.getY();
-            reg[2] = match.getW();
-            reg[3] = match.getH();
-            return reg;
+            return regionFromMatch(match);
         }
         catch (FindFailed e) {
             capture();
             throw new ScreenOperationException("Click "+image+" failed"+e.getMessage(), e);
         }
+    }
+
+    private int[] regionFromMatch(Match match) {
+        int[] reg = new int[4];
+        reg[0] = match.getX();
+        reg[1] = match.getY();
+        reg[2] = match.getW();
+        reg[3] = match.getH();
+        return reg;
     }
 
     @RobotKeywordOverload
@@ -147,12 +151,7 @@ public class ScreenKeywords {
             throw new ScreenOperationException("Click "+image+" failed"+e.getMessage(), e);
         }
 
-        int[] reg = new int[4];
-        reg[0] = match.getX();
-        reg[1] = match.getY();
-        reg[2] = match.getW();
-        reg[3] = match.getH();
-        return reg;
+        return regionFromMatch(match);
     }
 
     @RobotKeyword("Click Text"
@@ -164,12 +163,7 @@ public class ScreenKeywords {
         try {
             Match match = screen.findText(text);
             match.click();
-            int[] reg = new int[4];
-            reg[0] = match.getX();
-            reg[1] = match.getY();
-            reg[2] = match.getW();
-            reg[3] = match.getH();
-            return reg;
+            return regionFromMatch(match);
         }
         catch (FindFailed e) {
             capture();
@@ -231,12 +225,7 @@ public class ScreenKeywords {
         Match match = matches.get(index);
         capture(match);
         matches.get(index).click();
-        int[] reg = new int[4];
-        reg[0] = match.getX();
-        reg[1] = match.getY();
-        reg[2] = match.getW();
-        reg[3] = match.getH();
-        return reg;
+        return regionFromMatch(match);
     }
 
     @RobotKeywordOverload
@@ -255,12 +244,7 @@ public class ScreenKeywords {
             throw new ScreenOperationException("Click "+image+" failed"+e.getMessage(), e);
         }
         Match match = region.getLastMatch();
-        int[] reg = new int[4];
-        reg[0] = match.getX();
-        reg[1] = match.getY();
-        reg[2] = match.getW();
-        reg[3] = match.getH();
-        return reg;
+        return regionFromMatch(match);
     }
 
     //added by auyong
@@ -278,33 +262,43 @@ public class ScreenKeywords {
             capture();
             throw new ScreenOperationException("Double Click "+image+" failed"+e.getMessage(), e);
         }
-        int[] reg = new int[4];
-        reg[0] = match.getX();
-        reg[1] = match.getY();
-        reg[2] = match.getW();
-        reg[3] = match.getH();
-        return reg;
+        return regionFromMatch(match);
     }
 
-    @RobotKeyword("Right click")
-    @ArgumentNames({"image"})
-    public int[] rightClick(String image) throws Exception{
+    @RobotKeyword("Right click"
+            + "\n\nClick on an image with similarity and offset."
+            + "\nExamples:"
+            + "\n| Click | hello.png |")
+    @ArgumentNames({"image", "xOffset=0", "yOffset=0"})
+    public int[] rightClick(String image) throws Exception {
         wait(image, Double.toString(this.timeout));
         try {
             region.rightClick(getPattern(image));
-        }
-        catch (FindFailed e) {
-            throw new ScreenOperationException("Click "+image+" failed"+e.getMessage(), e);
+        } catch (FindFailed e) {
+            capture();
+            throw new ScreenOperationException("Click " + image + " failed" + e.getMessage(), e);
         }
         Match match = region.getLastMatch();
-        int[] reg = new int[4];
-        reg[0] = match.getX();
-        reg[1] = match.getY();
-        reg[2] = match.getW();
-        reg[3] = match.getH();
-        return reg;
+        return regionFromMatch(match);
     }
 
+    @RobotKeywordOverload
+    public int[] rightClick(String image, int xOffset, int yOffset) throws Exception {
+        Match match = wait(image, Double.toString(this.timeout));
+        Location center = match.getCenter();
+        try {
+            int newX = center.getX() + xOffset;
+            int newY = center.getY() + yOffset;
+            Location newLocation = new Location(newX, newY);
+            region.rightClick(newLocation);
+        } catch (FindFailed e) {
+            capture();
+            throw new ScreenOperationException("Click " + image + " failed" + e.getMessage(), e);
+        }
+
+        return regionFromMatch(match);
+    }
+    
     private Match wait(String image, String timeout) throws TimeoutException {
         try {
             Match match = region.wait(getPattern(image), Double.parseDouble(timeout));
