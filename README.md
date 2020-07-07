@@ -12,8 +12,9 @@ Before using this library, please check [doc of sikulix](https://sikulix-2014.re
 
 |  SikuliLibrary          |  sikulixapi   |
 |  ---                    |  ---          |
-|  master                 |  2.0.1        |
-|  [v1.1.2](https://github.com/rainmanwy/robotframework-SikuliLibrary/tree/v1.1.2)   |   1.1.2       |
+|  master                 |  2.0.4        |
+|  2.0.0                  |  2.0.4        |
+|  1.0.8                  |  2.0.1        |
 
 
 
