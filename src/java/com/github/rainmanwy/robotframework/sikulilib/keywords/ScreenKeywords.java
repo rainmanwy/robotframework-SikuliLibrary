@@ -638,6 +638,40 @@ public class ScreenKeywords {
         }
     }
 
+    @RobotKeyword("Key down"
+            + "\n Press keyboard key and hold it."
+            + "\n\n For a list of possible Keys view docs for org.sikuli.script.Key ."
+            + "\n\n Examples:"
+            + "\n | Click | textFieldWithDefaultText.png | "
+            + "\n | Key down | CTRL | ")
+    @ArgumentNames({"keyConstant"})
+    public void keyDown(String specialCharName) throws ScreenOperationException{
+        try{
+            Object key =  Key.class.getField(specialCharName).get(null);
+            region.keyDown(key.toString());
+        }
+        catch(ReflectiveOperationException e){
+            throw new ScreenOperationException("No " +specialCharName.toString() + " in class org.sikuli.script.Key ");
+        }
+    }
+
+    @RobotKeyword("Key up"
+            + "\n Release keyboard key."
+            + "\n\n For a list of possible Keys view docs for org.sikuli.script.Key ."
+            + "\n\n Examples:"
+            + "\n | Click | textFieldWithDefaultText.png | "
+            + "\n | Key UP | CTRL | ")
+    @ArgumentNames({"keyConstant"})
+    public void keyUp(String specialCharName) throws ScreenOperationException{
+        try{
+            Object key =  Key.class.getField(specialCharName).get(null);
+            region.keyUp(key.toString());
+        }
+        catch(ReflectiveOperationException e){
+            throw new ScreenOperationException("No " +specialCharName.toString() + " in class org.sikuli.script.Key ");
+        }
+    }
+
     @RobotKeyword("Mouse move"
             + "Move the mouse pointer to the target"
             + "\n\n @image: if image is empty, will move mouse to the last matched."
@@ -657,6 +691,48 @@ public class ScreenKeywords {
     @RobotKeywordOverload
     public void mouseMove() throws Exception{
         int result = region.mouseMove();
+        if (result==0) {
+            throw new ScreenOperationException("Failed to move mouse to last matched image");
+        }
+    }
+
+    @RobotKeyword("Mouse move"
+            + "Move the mouse pointer to the target region"
+            + "\n\n @cooridnates: cooridnates where mouse should move"
+            + "\n\n Examples:"
+            + "\n | Mouse Move region | [20, 20, 20, 20] |"
+            + "\n | Mouse Move region | [20, 20, 20, 20] |")
+    @ArgumentNames({"cooridnates", "highlight_timeout"})
+    public void mouseMoveRegion(ArrayList<Object> cooridnates, int highlight_timeout)  throws Exception {
+        int x = Integer.parseInt(cooridnates.get(0).toString());
+        int y = Integer.parseInt(cooridnates.get(1).toString());
+        int w = Integer.parseInt(cooridnates.get(2).toString());
+        int h = Integer.parseInt(cooridnates.get(3).toString());
+        Region region = new Region(x, y, w, h);
+        int result = region.mouseMove();
+        if (result==0) {
+            throw new ScreenOperationException("Failed to move mouse to last matched image");
+        }
+        if (highlight_timeout > 0) {
+            region.highlight(highlight_timeout);
+        }
+    }
+
+    @RobotKeywordOverload
+    public void mouseMoveRegion(ArrayList<Object> cooridnates) throws Exception {
+        mouseMoveRegion(cooridnates, 0);
+    }
+
+    @RobotKeyword("Mouse move location"
+            + "Move the mouse pointer to the target location"
+            + "\n\n @x: x cooridnate where mouse should move"
+            + "\n\n @y: y cooridnate where mouse should move"
+            + "\n\n Examples:"
+            + "\n | Mouse Move Location | 20 | 20 |")
+    @ArgumentNames({"x=0", "y=0"})
+    public void mouseMoveLocation(int x, int y) throws Exception {
+        Location location = new Location(x, y);
+        int result = region.mouseMove(location);
         if (result==0) {
             throw new ScreenOperationException("Failed to move mouse to last matched image");
         }
