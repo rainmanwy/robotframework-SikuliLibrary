@@ -17,6 +17,8 @@ import com.github.rainmanwy.robotframework.sikulilib.utils.CaptureFolder;
 import org.sikuli.basics.Settings;
 import org.sikuli.script.*;
 
+
+
 /**
  * Created by Wang Yang on 2015/8/19.
  */
@@ -170,6 +172,26 @@ public class ScreenKeywords {
             throw new ScreenOperationException("Click text '"+ text+"' failed"+e.getMessage(), e);
         }
     }
+	
+	    @RobotKeyword("Region Click Text"
+            + "\n\nClick on text in region."
+			+ "\nSet a region before."
+            + "\nExamples:"
+            + "\n| Region Click Text | Hello |")
+    @ArgumentNames({"text"})
+    public int[] RegionClickText(String text) throws Exception{
+        try {
+            Match match = region.findText(text);
+            match.click();
+            return regionFromMatch(match);
+        }
+        catch (FindFailed e) {
+            capture();
+            throw new ScreenOperationException("Region Click Text '"+ text+"' failed"+e.getMessage(), e);
+        }
+    }
+	
+
 
     @RobotKeyword("Click region"
             + "\n\n Click on defined region cooridinates."
@@ -892,7 +914,7 @@ public class ScreenKeywords {
         region = new Region(screen);
     }
 
-    @RobotKeyword("Reset ROI"
+    @RobotKeyword("Reset Roi"
             + "\n Set Region of interest to full screen"
             + "\n\n Examples:"
             + "\n | Reset roi |")
@@ -1026,8 +1048,9 @@ public class ScreenKeywords {
             + "\n\n Set region of interest on screen"
             + "\n Optionally pass highlight timeout."
             + "\n\n Examples:"
-            + "\n | Set ROI | [x, y, w, h] |"
-            + "\n | Set ROI | [x, y, w, h] | 2 |")
+			+"${coordinates} | set variable | @{x, y, w, h] |"
+            + "\n | Set ROI | ${coordinates} |"
+            + "\n | Set ROI | ${coordinates} | 2 |")
     @ArgumentNames({"cooridnates", "timeout=0"})
     public void setRoi(ArrayList<Object> cooridnates, int timeout) {
         int x = Integer.parseInt(cooridnates.get(0).toString());

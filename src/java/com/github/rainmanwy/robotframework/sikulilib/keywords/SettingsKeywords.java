@@ -5,8 +5,12 @@ import org.robotframework.javalib.annotation.RobotKeyword;
 import org.robotframework.javalib.annotation.RobotKeywords;
 import org.sikuli.basics.Settings;
 
+
 /**
  * Created by Wang Yang on 2016/5/5.
+ * 20201018 addings:
+ *   - Set OCR language keyword
+ *	 - Set OCD Read documentation clarified
  */
 
 @RobotKeywords
@@ -20,10 +24,24 @@ public class SettingsKeywords {
         return Double.toString(prevMinSimilarity);
     }
 
-    @RobotKeyword("OCR text read")
+    @RobotKeyword("OCR text read"
+				+ "\nIf needed use Set OCR Language before."
+				+ "`\nDefault language : English (eng).")
     @ArgumentNames({"ocrTextRead"})
     public void setOcrTextRead(boolean ocrTextRead) {
         Settings.OcrTextRead = ocrTextRead;
+    }
+	
+	@RobotKeyword("Set OCR language"
+				+ "\n\nSet OCR language"
+                + "\nThree letters parameter"
+				+ "\nDefault : eng for English language"
+				+ "\nExamples:"
+                + "\n| Set OCR Language | eng |"
+				+ "\n| Set OCR Language | fra |")
+    @ArgumentNames({"ocrTextLanguage"})
+    public void setOcrLanguage(String ocrTextLanguage) {
+        Settings.OcrLanguage = ocrTextLanguage;
     }
 
     @RobotKeyword("Set show actions")
