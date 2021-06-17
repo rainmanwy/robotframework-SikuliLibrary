@@ -201,12 +201,12 @@ public class ScreenKeywords {
             + "\n | Click on region | [x,y,w,h] | image.png |"
             + "\n | Click on region | [x,y,w,h] | image.png | 0 |"
             + "\n | Click on region | [x,y,w,h] | image.png | 0 | 2 |")
-    @ArgumentNames({"cooridnates", "waitChange=0", "timeout=0"})
-    public void clickRegion(ArrayList<Object> cooridnates, double waitChange, int highlight_timeout) {
-        int x = Integer.parseInt(cooridnates.get(0).toString());
-        int y = Integer.parseInt(cooridnates.get(1).toString());
-        int w = Integer.parseInt(cooridnates.get(2).toString());
-        int h = Integer.parseInt(cooridnates.get(3).toString());
+    @ArgumentNames({"coordinates", "waitChange=0", "timeout=0"})
+    public void clickRegion(ArrayList<Object> coordinates, double waitChange, int highlight_timeout) {
+        int x = Integer.parseInt(coordinates.get(0).toString());
+        int y = Integer.parseInt(coordinates.get(1).toString());
+        int w = Integer.parseInt(coordinates.get(2).toString());
+        int h = Integer.parseInt(coordinates.get(3).toString());
         Region region = new Region(x, y, w, h);
         // After clicking on plugin, make sure it has changed, before returning from this step.
         String img = capture(region);
@@ -221,13 +221,13 @@ public class ScreenKeywords {
     }
 
     @RobotKeywordOverload
-    public void clickRegion(ArrayList<Object> cooridnates, double waitChange) {
-        clickRegion(cooridnates, waitChange, 0);
+    public void clickRegion(ArrayList<Object> coordinates, double waitChange) {
+        clickRegion(coordinates, waitChange, 0);
     }
 
     @RobotKeywordOverload
-    public void clickRegion(ArrayList<Object> cooridnates) {
-        clickRegion(cooridnates, this.timeout, 0);
+    public void clickRegion(ArrayList<Object> coordinates) {
+        clickRegion(coordinates, this.timeout, 0);
     }
 
     @RobotKeyword("Click nth"
@@ -495,12 +495,12 @@ public class ScreenKeywords {
             + "\n\nCapture region passed"
             + "\nExamples:"
             + "\n| ${screenshotname}= | Capture region | [x, y, w, h] |")
-    @ArgumentNames({"cooridnates"})
-    public static String captureRegion(ArrayList<Object> cooridnates) {
-        int x = Integer.parseInt(cooridnates.get(0).toString());
-        int y = Integer.parseInt(cooridnates.get(1).toString());
-        int w = Integer.parseInt(cooridnates.get(2).toString());
-        int h = Integer.parseInt(cooridnates.get(3).toString());
+    @ArgumentNames({"coordinates"})
+    public static String captureRegion(ArrayList<Object> coordinates) {
+        int x = Integer.parseInt(coordinates.get(0).toString());
+        int y = Integer.parseInt(coordinates.get(1).toString());
+        int w = Integer.parseInt(coordinates.get(2).toString());
+        int h = Integer.parseInt(coordinates.get(3).toString());
         Region region = new Region(x, y, w, h);
         ScreenImage image = ScreenKeywords.getScreen().capture(region);
         String imagePath = image.save(CaptureFolder.getInstance().getCaptureFolder());
@@ -569,12 +569,12 @@ public class ScreenKeywords {
     }
 
     @RobotKeyword("Highlight region")
-    @ArgumentNames({"cooridnates", "timeout"})
-    public void highlightRegion(ArrayList<Object> cooridnates, int timeout) {
-        int x = Integer.parseInt(cooridnates.get(0).toString());
-        int y = Integer.parseInt(cooridnates.get(1).toString());
-        int w = Integer.parseInt(cooridnates.get(2).toString());
-        int h = Integer.parseInt(cooridnates.get(3).toString());
+    @ArgumentNames({"coordinates", "timeout"})
+    public void highlightRegion(ArrayList<Object> coordinates, int timeout) {
+        int x = Integer.parseInt(coordinates.get(0).toString());
+        int y = Integer.parseInt(coordinates.get(1).toString());
+        int w = Integer.parseInt(coordinates.get(2).toString());
+        int h = Integer.parseInt(coordinates.get(3).toString());
         Region region = new Region(x, y, w, h);
         region.highlight(timeout);
         capture(region);
@@ -660,6 +660,41 @@ public class ScreenKeywords {
         }
     }
 
+    @RobotKeyword("Key down"
+            + "\n Press keyboard key and hold it."
+            + "\n\n For a list of possible Keys view docs for org.sikuli.script.Key ."
+            + "\n\n Examples:"
+            + "\n | Key down | CTRL | "
+            + "\n | Click | textFieldWithDefaultText.png | ")
+    @ArgumentNames({"keyConstant"})
+    public void keyDown(String specialCharName) throws ScreenOperationException{
+        try{
+            Object key =  Key.class.getField(specialCharName).get(null);
+            region.keyDown(key.toString());
+        }
+        catch(ReflectiveOperationException e){
+            throw new ScreenOperationException("No " +specialCharName.toString() + " in class org.sikuli.script.Key ");
+        }
+    }
+
+    @RobotKeyword("Key up"
+            + "\n Release keyboard key."
+            + "\n\n For a list of possible Keys view docs for org.sikuli.script.Key ."
+            + "\n\n Examples:"
+            + "\n | Click | textFieldWithDefaultText.png | "
+            + "\n | Key UP | CTRL | ")
+    @ArgumentNames({"keyConstant"})
+    public void keyUp(String specialCharName) throws ScreenOperationException{
+        try{
+            Object key =  Key.class.getField(specialCharName).get(null);
+            region.keyUp(key.toString());
+        }
+        catch(ReflectiveOperationException e){
+            throw new ScreenOperationException("No " +specialCharName.toString() + " in class org.sikuli.script.Key ");
+        }
+    }
+
+
     @RobotKeyword("Mouse move"
             + "Move the mouse pointer to the target"
             + "\n\n @image: if image is empty, will move mouse to the last matched."
@@ -679,6 +714,47 @@ public class ScreenKeywords {
     @RobotKeywordOverload
     public void mouseMove() throws Exception{
         int result = region.mouseMove();
+        if (result==0) {
+            throw new ScreenOperationException("Failed to move mouse to last matched image");
+        }
+    }
+
+    @RobotKeyword("Mouse move region"
+        + "Move the mouse pointer to the target region"
+        + "\n\n @coordinates: coordinates where mouse should move"
+        + "\n\n Examples:"
+        + "\n | Mouse Move region | [20, 20, 20, 20] |")
+    @ArgumentNames({"coordinates", "highlight_timeout"})
+    public void mouseMoveRegion(ArrayList<Object> coordinates, int highlight_timeout)  throws Exception {
+        int x = Integer.parseInt(coordinates.get(0).toString());
+        int y = Integer.parseInt(coordinates.get(1).toString());
+        int w = Integer.parseInt(coordinates.get(2).toString());
+        int h = Integer.parseInt(coordinates.get(3).toString());
+        Region region = new Region(x, y, w, h);
+        int result = region.mouseMove();
+        if (result==0) {
+            throw new ScreenOperationException("Failed to move mouse to last matched image");
+        }
+        if (highlight_timeout > 0) {
+            region.highlight(highlight_timeout);
+        }
+    }
+
+    @RobotKeywordOverload
+    public void mouseMoveRegion(ArrayList<Object> coordinates) throws Exception {
+        mouseMoveRegion(coordinates, 0);
+    }
+
+    @RobotKeyword("Mouse move location"
+            + "Move the mouse pointer to the target location"
+            + "\n\n @x: x cooridnate where mouse should move"
+            + "\n\n @y: y cooridnate where mouse should move"
+            + "\n\n Examples:"
+            + "\n | Mouse Move Location | 20 | 20 |")
+    @ArgumentNames({"x=0", "y=0"})
+    public void mouseMoveLocation(int x, int y) throws Exception {
+        Location location = new Location(x, y);
+        int result = region.mouseMove(location);
         if (result==0) {
             throw new ScreenOperationException("Failed to move mouse to last matched image");
         }
@@ -1051,12 +1127,12 @@ public class ScreenKeywords {
 			+"${coordinates} | set variable | @{x, y, w, h] |"
             + "\n | Set ROI | ${coordinates} |"
             + "\n | Set ROI | ${coordinates} | 2 |")
-    @ArgumentNames({"cooridnates", "timeout=0"})
-    public void setRoi(ArrayList<Object> cooridnates, int timeout) {
-        int x = Integer.parseInt(cooridnates.get(0).toString());
-        int y = Integer.parseInt(cooridnates.get(1).toString());
-        int w = Integer.parseInt(cooridnates.get(2).toString());
-        int h = Integer.parseInt(cooridnates.get(3).toString());
+    @ArgumentNames({"coordinates", "timeout=0"})
+    public void setRoi(ArrayList<Object> coordinates, int timeout) {
+        int x = Integer.parseInt(coordinates.get(0).toString());
+        int y = Integer.parseInt(coordinates.get(1).toString());
+        int w = Integer.parseInt(coordinates.get(2).toString());
+        int h = Integer.parseInt(coordinates.get(3).toString());
         region.setROI(x, y, w, h);
         if (timeout > 0) {
             this.highlightRoi(timeout);
@@ -1064,8 +1140,8 @@ public class ScreenKeywords {
     }
 
     @RobotKeywordOverload
-    public void setRoi(ArrayList<Object> cooridnates) {
-        setRoi(cooridnates, 0);
+    public void setRoi(ArrayList<Object> coordinates) {
+        setRoi(coordinates, 0);
     }
 
     @RobotKeyword("Select Region"
