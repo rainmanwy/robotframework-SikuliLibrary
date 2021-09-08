@@ -16,7 +16,10 @@ import org.sikuli.basics.Settings;
 @RobotKeywords
 public class SettingsKeywords {
 
-    @RobotKeyword("Set min similarity")
+    @RobotKeyword("Set min similarity (accuracy of matching elements)."
+            + "\n\nminSimilarity can be a decimal number between 0 and 1"
+            + "\n\nExample:"
+            + "\n\n| Set Min Similarity | 0.85 |")
     @ArgumentNames({"minSimilarity"})
     public String setMinSimilarity(String minSimilarity) {
         double prevMinSimilarity = Settings.MinSimilarity;
