@@ -385,10 +385,11 @@ public class ScreenKeywords {
         }
     }
 
-    @RobotKeyword("Input text"
+    @RobotKeyword("Input text."
             + "\n Image could be empty"
             + "\n\n Examples:"
-            + "\n | Input text | Sikuli |")
+            + "\n | Input text | image.png | Sikuli |"
+            + "\n | Input text | ${EMPTY} | Sikuli |")
     @ArgumentNames({"image", "text"})
     public void inputText(String image, String text) throws Exception {
         System.out.println("Input Text:");
