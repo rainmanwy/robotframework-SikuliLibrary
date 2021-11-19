@@ -860,6 +860,7 @@ public class ScreenKeywords {
     public String getText(String image) throws Exception {
         Match match = find(image);
         if (match == null) {
+            capture(region);
             throw new ScreenOperationException("Could not find " + image);
         }
         Image matchImage = match.getImage();
@@ -882,11 +883,13 @@ public class ScreenKeywords {
             if (wantedMatch != null) {
                 return;
             } else if ( notWantedMatch != null ) {
+                capture(notWantedMatch);
                 throw new ScreenOperationException(notWantedImage + " is founded! " + notWantedMatch);
             } else {
                 Thread.sleep(500);
             }
         }
+        capture(region);
         throw new TimeoutException("Could not find " + wantedImage);
 
     }
