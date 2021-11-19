@@ -65,8 +65,6 @@ public class ScreenKeywords {
             pattern = new Pattern(locator);
         }
 
-
-
         return pattern;
     }
 
@@ -116,6 +114,24 @@ public class ScreenKeywords {
             + "\nExamples:"
             + "\n| Click | hello.png |")
     @ArgumentNames({"image", "xOffset=0", "yOffset=0"})
+    public int[] click(String image, int xOffset, int yOffset) throws Exception{
+        Match match = wait(image, Double.toString(this.timeout));
+        Location center = match.getCenter();
+        try {
+            int newX = center.getX() + xOffset;
+            int newY = center.getY() + yOffset;
+            Location newLocation = new Location(newX, newY);
+            region.click(newLocation);
+        }
+        catch (FindFailed e) {
+            capture();
+            throw new ScreenOperationException("Click "+image+" failed"+e.getMessage(), e);
+        }
+
+        return regionFromMatch(match);
+    }
+
+    @RobotKeywordOverload
     public int[] click(String image) throws Exception{
         wait(image, Double.toString(this.timeout));
         try {
@@ -136,24 +152,6 @@ public class ScreenKeywords {
         reg[2] = match.getW();
         reg[3] = match.getH();
         return reg;
-    }
-
-    @RobotKeywordOverload
-    public int[] click(String image, int xOffset, int yOffset) throws Exception{
-        Match match = wait(image, Double.toString(this.timeout));
-        Location center = match.getCenter();
-        try {
-            int newX = center.getX() + xOffset;
-            int newY = center.getY() + yOffset;
-            Location newLocation = new Location(newX, newY);
-            region.click(newLocation);
-        }
-        catch (FindFailed e) {
-            capture();
-            throw new ScreenOperationException("Click "+image+" failed"+e.getMessage(), e);
-        }
-
-        return regionFromMatch(match);
     }
 
     @RobotKeyword("Click Text"
@@ -190,17 +188,16 @@ public class ScreenKeywords {
             throw new ScreenOperationException("Region Click Text '"+ text+"' failed"+e.getMessage(), e);
         }
     }
-	
-
 
     @RobotKeyword("Click region"
             + "\n\n Click on defined region cooridinates."
             + "\n Optionally Wait for specified time to ensure region has changed."
             + "\n Also, optionally set highlight"
             + "\n\n Examples:"
-            + "\n | Click on region | [x,y,w,h] | image.png |"
-            + "\n | Click on region | [x,y,w,h] | image.png | 0 |"
-            + "\n | Click on region | [x,y,w,h] | image.png | 0 | 2 |")
+            + "\n | ${coor} | Create List | 0 | 0 | 100 | 100 |"
+            + "\n | Click Region | ${coor} |"
+            + "\n | Click Region | ${coor} | 0 |"
+            + "\n | Click Region | ${coor} | 0 | 2 |")
     @ArgumentNames({"coordinates", "waitChange=0", "timeout=0"})
     public void clickRegion(ArrayList<Object> coordinates, double waitChange, int highlight_timeout) {
         int x = Integer.parseInt(coordinates.get(0).toString());
@@ -255,8 +252,7 @@ public class ScreenKeywords {
         return clickNth(image, index, false);
     }
 
-    @RobotKeyword("Double click")
-    @ArgumentNames({"image", "xOffset=0", "yOffset=0"})
+    @RobotKeywordOverload
     public int[] doubleClick(String image) throws Exception{
         wait(image, Double.toString(this.timeout));
         try {
@@ -270,7 +266,8 @@ public class ScreenKeywords {
     }
 
     //added by auyong
-    @RobotKeywordOverload
+    @RobotKeyword("Double click")
+    @ArgumentNames({"image", "xOffset=0", "yOffset=0"})
     public int[] doubleClick(String image, int xOffset, int yOffset) throws Exception{
         Match match = wait(image, Double.toString(this.timeout));
         Location center = match.getCenter();
@@ -287,11 +284,7 @@ public class ScreenKeywords {
         return regionFromMatch(match);
     }
 
-    @RobotKeyword("Right click"
-            + "\n\nClick on an image with similarity and offset."
-            + "\nExamples:"
-            + "\n| Click | hello.png |")
-    @ArgumentNames({"image", "xOffset=0", "yOffset=0"})
+    @RobotKeywordOverload
     public int[] rightClick(String image) throws Exception {
         wait(image, Double.toString(this.timeout));
         try {
@@ -304,7 +297,11 @@ public class ScreenKeywords {
         return regionFromMatch(match);
     }
 
-    @RobotKeywordOverload
+    @RobotKeyword("Right click"
+            + "\n\nClick on an image with similarity and offset."
+            + "\nExamples:"
+            + "\n| Click | hello.png |")
+    @ArgumentNames({"image", "xOffset=0", "yOffset=0"})
     public int[] rightClick(String image, int xOffset, int yOffset) throws Exception {
         Match match = wait(image, Double.toString(this.timeout));
         Location center = match.getCenter();
@@ -846,6 +843,11 @@ public class ScreenKeywords {
         region.wheel(Button.WHEEL_DOWN, steps);
     }
 
+    @RobotKeywordOverload
+    public String getText() throws Exception {
+        return region.text();
+    }
+
     @RobotKeyword("Get text"
             + "\n\n If image is not given, keyword will get text from whole Screen"
             + "\n If image is given, keyword will get text from matched region"
@@ -855,11 +857,6 @@ public class ScreenKeywords {
             + "\n | Get Text           |"
             + "\n | Get Text           | test.png   |")
     @ArgumentNames({"image="})
-    public String getText() throws Exception {
-        return region.text();
-    }
-
-    @RobotKeywordOverload
     public String getText(String image) throws Exception {
         Match match = find(image);
         if (match == null) {

@@ -72,4 +72,14 @@ public class SettingsKeywords {
     public void setWaitScanRate(float scanRate) {
         Settings.WaitScanRate = scanRate;
     }
+
+    @RobotKeyword("Set Always Resize"
+            + "\nA decimal value greater 0 and not equal to 1 to switch the feature on."
+            + "\nWith this setting you can tell SikuliX to generally resize all given images before a search operation using the given factor, which is applied to both width and height. The implementation internally uses the standard behavior of resizing a Java-AWT-BufferedImage."
+            + "\n\nTo switch the feature off again, just assign 0 or 1."
+    )
+    @ArgumentNames({"resize"})
+    public void setAlwaysResize(float resize) {
+        Settings.AlwaysResize = resize;
+    }
 }
