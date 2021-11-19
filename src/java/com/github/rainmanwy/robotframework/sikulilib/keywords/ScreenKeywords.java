@@ -492,7 +492,8 @@ public class ScreenKeywords {
     @RobotKeyword("Capture region\n"
             + "\n\nCapture region passed"
             + "\nExamples:"
-            + "\n| ${screenshotname}= | Capture region | [x, y, w, h] |")
+            + "\n| ${coor} | Create List | x | y | w | h |"
+            + "\n| ${screenshotname}= | Capture region | ${coor} |")
     @ArgumentNames({"coordinates"})
     public static String captureRegion(ArrayList<Object> coordinates) {
         int x = Integer.parseInt(coordinates.get(0).toString());
