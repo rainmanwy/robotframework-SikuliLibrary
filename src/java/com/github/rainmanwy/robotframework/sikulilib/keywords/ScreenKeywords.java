@@ -437,7 +437,7 @@ public class ScreenKeywords {
             this.click(image);
         }
         int result = region.paste(text);
-        if (result != 0) {
+        if (result != 1) {
             throw new ScreenOperationException("Paste text failed");
         }
     }
