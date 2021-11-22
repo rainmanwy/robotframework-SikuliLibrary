@@ -946,7 +946,7 @@ public class ScreenKeywords {
             + "\n Count how many times the same picture is detected in screen."
             + "\n\n Examples:"
             + "\n | ${image_cnt}=  |  Image Count  | test.png  |")
-    @ArgumentNames({"steps", "image="})
+    @ArgumentNames({"image"})
     public int imageCount(String image){
         int count = 0;
         Iterator<Match> matches;
