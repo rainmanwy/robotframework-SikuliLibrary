@@ -231,9 +231,9 @@ public class ScreenKeywords {
             + "\n\n Click on specific image."
             + "\n Optionally pass similarity and sort by column or row."
             + "\n\n Examples:"
-            + "\n | Click on nth image in region | image.png | 1 | 0.9 |"
-            + "\n | Click on nth image in region | image.png | 1 | 0.9 | ${FALSE} |")
-    @ArgumentNames({"image", "index", "similarity", "sortByColumn=true"})
+            + "\n | Click on nth image in region | image.png | 1 |"
+            + "\n | Click on nth image in region | image.png | 1 | ${FALSE} |")
+    @ArgumentNames({"image", "index", "sortByColumn=true"})
     public int[] clickNth(String image, int index, Boolean sortByColumn) throws Exception {
         List<Match> matches = null;
         if (sortByColumn) {
@@ -249,7 +249,7 @@ public class ScreenKeywords {
 
     @RobotKeywordOverload
     public int[] clickNth(String image, int index) throws Exception {
-        return clickNth(image, index, false);
+        return clickNth(image, index, true);
     }
 
     @RobotKeywordOverload
@@ -326,7 +326,7 @@ public class ScreenKeywords {
         }
         catch(FindFailed e) {
             capture(region);
-            throw new TimeoutException("Timeout happend, could not find "+ getPattern(image).toString(), e);
+            throw new TimeoutException("Timeout happened, could not find "+ getPattern(image).toString(), e);
         }
     }
 
