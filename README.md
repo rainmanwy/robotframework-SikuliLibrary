@@ -12,7 +12,7 @@ Before using this library, please check [doc of sikulix](https://sikulix-2014.re
 
 |  SikuliLibrary          |  sikulixapi   |
 |  ---                    |  ---          |
-|  master                 |  2.0.4        |
+|  master                 |  2.0.5        |
 |  2.0.0                  |  2.0.4        |
 |  1.0.8                  |  2.0.1        |
 
