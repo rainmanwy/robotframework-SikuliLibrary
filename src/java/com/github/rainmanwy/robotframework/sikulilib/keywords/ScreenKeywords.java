@@ -466,23 +466,17 @@ public class ScreenKeywords {
 
     private String capture() {
         ScreenImage image = screen.capture(region);
-        String imagePath = image.save(CaptureFolder.getInstance().getCaptureFolder());
-        System.out.println("*DEBUG* Saved path: "+imagePath);
-        File file = new File(imagePath);
-        String fileName = file.getName();
-        System.out.println("*HTML* <img src='" + CaptureFolder.getInstance().getSubFolder() + "/" + fileName + "'/>");
-        return imagePath;
+        return saveImage(image);
     }
 
     private String capture(Region region) {
+        return capture(region, null);
+    }
+
+    private String capture(Region region, String imageName) {
         if (isCaptureMatchedImage) {
             ScreenImage image = screen.capture(region);
-            String imagePath = image.save(CaptureFolder.getInstance().getCaptureFolder());
-            System.out.println("*DEBUG* Saved path: "+imagePath);
-            File file = new File(imagePath);
-            String fileName = file.getName();
-            System.out.println("*HTML* <img src='" + CaptureFolder.getInstance().getSubFolder() + "/" + fileName + "'/>");
-            return imagePath;
+            return saveImage(image, imageName);
         }
         return null;
     }
@@ -491,25 +485,31 @@ public class ScreenKeywords {
             + "\n\nCapture region passed"
             + "\nExamples:"
             + "\n| ${coor} | Create List | x | y | w | h |"
-            + "\n| ${screenshotname}= | Capture region | ${coor} |")
-    @ArgumentNames({"coordinates"})
-    public static String captureRegion(ArrayList<Object> coordinates) {
+            + "\n| ${screenshotname}= | Capture region | ${coor} | demo.png |"
+            + "\n| ${screenshotname}= | Capture region | ${coor} | ")
+    @ArgumentNames({"coordinates", "imageName="})
+    public static String captureRegion(ArrayList<Object> coordinates, String imageName) {
         int x = Integer.parseInt(coordinates.get(0).toString());
         int y = Integer.parseInt(coordinates.get(1).toString());
         int w = Integer.parseInt(coordinates.get(2).toString());
         int h = Integer.parseInt(coordinates.get(3).toString());
         Region region = new Region(x, y, w, h);
         ScreenImage image = ScreenKeywords.getScreen().capture(region);
-        String imagePath = image.save(CaptureFolder.getInstance().getCaptureFolder());
-        System.out.println("*DEBUG* Saved path: "+imagePath);
-        File file = new File(imagePath);
-        String fileName = file.getName();
-        System.out.println("*HTML* <img src='" + CaptureFolder.getInstance().getSubFolder() + "/" + fileName + "'/>");
-        return imagePath;
+        return saveImage(image, imageName);
+    }
+
+    @RobotKeywordOverload
+    public static String captureRegion(ArrayList<Object> coordinates) {
+        return captureRegion(coordinates, null);
     }
 
     @RobotKeyword("Capture Roi")
-    @ArgumentNames({})
+    @ArgumentNames({"imageName="})
+    public String captureRoi(String imageName){
+        return capture(region, imageName);
+    }
+
+    @RobotKeywordOverload
     public String captureRoi(){
         return capture(region);
     }
@@ -1091,7 +1091,7 @@ public class ScreenKeywords {
             else{
                 r = new_region;
             }
-            
+
             result[0] = r.x;
             result[1] = r.y;
             result[2] = r.w;
@@ -1116,7 +1116,7 @@ public class ScreenKeywords {
         int h = Integer.parseInt(reg.get(3).toString());
 
         Region region = new Region(x,y,w,h);
-        
+
         return region.text();
     }
 
@@ -1162,16 +1162,16 @@ public class ScreenKeywords {
         return retval;
     }
 
-    @RobotKeyword("Double Click On Region" + 
+    @RobotKeyword("Double Click On Region" +
                 "\n there's no offset to be configured" +
-                "\n works with the keyword Get Extended Region From")    
+                "\n works with the keyword Get Extended Region From")
     @ArgumentNames("region")
     public void doubleClickOnRegion(ArrayList<Object> region) throws Exception{
         int x = Integer.parseInt(region.get(0).toString());
-        int y = Integer.parseInt(region.get(1).toString()); 
-        int w = Integer.parseInt(region.get(2).toString()); 
-        int h = Integer.parseInt(region.get(3).toString()); 
-        
+        int y = Integer.parseInt(region.get(1).toString());
+        int w = Integer.parseInt(region.get(2).toString());
+        int h = Integer.parseInt(region.get(3).toString());
+
         try{
             Region _region = new Region(x,y,w,h);
             _region.doubleClick();
@@ -1179,7 +1179,7 @@ public class ScreenKeywords {
         catch(Exception e){
             throw new Exception("error on doubleClickOnRegion, message: " + e);
         }
-    }    
+    }
 
     @RobotKeyword("Click On Region" +
                 "\n there's no offset to be configured" +
@@ -1187,10 +1187,10 @@ public class ScreenKeywords {
     @ArgumentNames("region")
     public void clickOnRegion(ArrayList<Object> region) throws Exception{
         int x = Integer.parseInt(region.get(0).toString());
-        int y = Integer.parseInt(region.get(1).toString()); 
-        int w = Integer.parseInt(region.get(2).toString()); 
-        int h = Integer.parseInt(region.get(3).toString()); 
-        
+        int y = Integer.parseInt(region.get(1).toString());
+        int w = Integer.parseInt(region.get(2).toString());
+        int h = Integer.parseInt(region.get(3).toString());
+
         try{
             Region _region = new Region(x,y,w,h);
             _region.click();
@@ -1201,14 +1201,14 @@ public class ScreenKeywords {
     }
 
     @RobotKeyword("Double Click On Match" +
-                "\n there's no offset to be configured" + 
-                "\n works with the keyword Return Match From Region")    
+                "\n there's no offset to be configured" +
+                "\n works with the keyword Return Match From Region")
     @ArgumentNames("match")
     public void doubleClickOnMatch(ArrayList<Object> match) throws Exception{
         int x = Integer.parseInt(match.get(0).toString());
-        int y = Integer.parseInt(match.get(1).toString()); 
-        int w = Integer.parseInt(match.get(2).toString()); 
-        int h = Integer.parseInt(match.get(3).toString());  
+        int y = Integer.parseInt(match.get(1).toString());
+        int w = Integer.parseInt(match.get(2).toString());
+        int h = Integer.parseInt(match.get(3).toString());
         double sc = Double.parseDouble(match.get(4).toString());
         try{
             Region reg = new Region(x,y,w,h);
@@ -1222,13 +1222,13 @@ public class ScreenKeywords {
 
     @RobotKeyword("Click On Match" +
                 "\n there's no offset to be configured" +
-                "\n works with the keyword Return Match From Region")    
+                "\n works with the keyword Return Match From Region")
     @ArgumentNames("match")
     public void clickOnMatch(ArrayList<Object> match) throws Exception{
         int x = Integer.parseInt(match.get(0).toString());
-        int y = Integer.parseInt(match.get(1).toString()); 
-        int w = Integer.parseInt(match.get(2).toString()); 
-        int h = Integer.parseInt(match.get(3).toString());  
+        int y = Integer.parseInt(match.get(1).toString());
+        int w = Integer.parseInt(match.get(2).toString());
+        int h = Integer.parseInt(match.get(3).toString());
         double sc = Double.parseDouble(match.get(4).toString());
         try{
             Region reg = new Region(x,y,w,h);
@@ -1240,26 +1240,26 @@ public class ScreenKeywords {
         }
     }
 
-    @RobotKeyword("Return Match From Region" + 
+    @RobotKeyword("Return Match From Region" +
                 "\n expect a region (from keyword Get Extended Region From) and a target to be search for (an image.png)" +
                 "\n returns the target as a object (string), it can be used with Click On Match keywords")
 
     @ArgumentNames({"region", "target"})
     public ArrayList<Object> returnMatchFromRegion(ArrayList<Object> region, String image)throws Exception{
-        
+
         ArrayList<Object> ob = new ArrayList<Object>();
         int x = Integer.parseInt(region.get(0).toString());
-        int y = Integer.parseInt(region.get(1).toString()); 
-        int w = Integer.parseInt(region.get(2).toString()); 
-        int h = Integer.parseInt(region.get(3).toString()); 
-               
+        int y = Integer.parseInt(region.get(1).toString());
+        int w = Integer.parseInt(region.get(2).toString());
+        int h = Integer.parseInt(region.get(3).toString());
+
         System.out.print("x: " + x);
         System.out.print("x: " + y);
         System.out.print("x: " + w);
         System.out.print("x: " + h);
 
         Region new_region = new Region(x,y,w,h);
-        
+
         try{
             Match el = new_region.find(image);
             ob.add(el.x);
@@ -1274,38 +1274,38 @@ public class ScreenKeywords {
         }
     }
 
-    @RobotKeyword("From Region Jump To" + 
-                  "\n Create a region and translate it related to the given region, the created region will have the exactly same height and width as the passed one " + 
-                  "\n ${jumps} = number of 'jumps' to move, like on a chess game, jumps will be the number of squares a piece moves " + 
+    @RobotKeyword("From Region Jump To" +
+                  "\n Create a region and translate it related to the given region, the created region will have the exactly same height and width as the passed one " +
+                  "\n ${jumps} = number of 'jumps' to move, like on a chess game, jumps will be the number of squares a piece moves " +
                   "\n ${direction} = | below | above | left | right | " +
-                  "\n ${margem} = add a space between jumps, must be >= 1 " + 
+                  "\n ${margem} = add a space between jumps, must be >= 1 " +
                   "\n |${translated_region} =    |    From Region Jump To  |  ${original_region}  |    below   |   4   |    1   |")
     @ArgumentNames({"region", "direction", "jumps", "margin"})
     public ArrayList<Object> fromRegionJumpTo(ArrayList<Object> region, String direction, String jumps, String margem) throws Exception {
         ArrayList<Object> result = new ArrayList<Object>();
-        
-        int Jumps = Integer.parseInt(jumps);	
+
+        int Jumps = Integer.parseInt(jumps);
         int Margem = Integer.parseInt(margem);
-        int x = Integer.parseInt(region.get(0).toString()); 
-        int y = Integer.parseInt(region.get(1).toString()); 
-        int w = Integer.parseInt(region.get(2).toString()); 
-        int h = Integer.parseInt(region.get(3).toString()); 
-                
+        int x = Integer.parseInt(region.get(0).toString());
+        int y = Integer.parseInt(region.get(1).toString());
+        int w = Integer.parseInt(region.get(2).toString());
+        int h = Integer.parseInt(region.get(3).toString());
+
         Region original = new Region(x,y,w,h);
         Region r = null;
         Location location = new Location(original.x, original.y);
-       
+
 
         if (direction.equals("below")){
             location.translate(0, ((original.h * Jumps) - (Jumps * Margem)));
-            r = new Region(location.x, location.y, w , h );           
+            r = new Region(location.x, location.y, w , h );
         }
         else if(direction.equals("above")){
             location.translate(0, -((original.h * Jumps) - (Jumps * Margem)));
             r = new Region(location.x, location.y, w , h );
         }
         else if(direction.equals("left")){
-            location.translate(-((original.w * Jumps) + (Jumps * Margem)), 0);           
+            location.translate(-((original.w * Jumps) + (Jumps * Margem)), 0);
             r = new Region(location.x, location.y, w , h );
         }
         else if(direction.equals("right")){
@@ -1314,39 +1314,39 @@ public class ScreenKeywords {
         }
         else{
             throw new Exception("direction has a invalid value");
-        }  
-        
+        }
+
         result.add(r.x);
         result.add(r.y);
         result.add(r.w);
         result.add(r.h);
-                
+
         return result;
     }
-    
-    @RobotKeyword("Get Extended Region From Region" + 
-                "\n Extended the given image creating a region above, below, in the left side or on the right, with the same height and width" + 
+
+    @RobotKeyword("Get Extended Region From Region" +
+                "\n Extended the given image creating a region above, below, in the left side or on the right, with the same height and width" +
                 "\n The height and width can change using the multiplier @number_of_times_to_repeat " +
-                "\n If 2 is given and direction = below the new region will have twice the height of the orignal and will be located right below it" + 
+                "\n If 2 is given and direction = below the new region will have twice the height of the orignal and will be located right below it" +
                 "\n |${below_region} =    |    Get Extended Region From Region  |  ${another_region}  |    below   |   1   |")
 
     @ArgumentNames({"image", "direction", "number of times to repeat"})
     public ArrayList<Object> getExtendedRegionFromRegion(ArrayList<Object> region, String direction, String number_of_times_to_repeat) throws Exception {
-        int number = Integer.parseInt(number_of_times_to_repeat);	
+        int number = Integer.parseInt(number_of_times_to_repeat);
 
-        int x = Integer.parseInt(region.get(0).toString()); 
-        int y = Integer.parseInt(region.get(1).toString()); 
-        int w = Integer.parseInt(region.get(2).toString()); 
-        int h = Integer.parseInt(region.get(3).toString()); 
+        int x = Integer.parseInt(region.get(0).toString());
+        int y = Integer.parseInt(region.get(1).toString());
+        int w = Integer.parseInt(region.get(2).toString());
+        int h = Integer.parseInt(region.get(3).toString());
 
         try{
             Region new_region = new Region(x,y,w,h);
             int height = new_region.h;
             int width = new_region.w;
-                        
+
             Region r = null;
             ArrayList<Object> result = new ArrayList<Object>();
-            
+
             if (direction.equals("below")){
                 r = new_region.below(height * number);
             }
@@ -1365,39 +1365,39 @@ public class ScreenKeywords {
             else{
                 throw new Exception("direction has a invalid value");
             }
-        
+
         result.add(r.x);
         result.add(r.y);
         result.add(r.w);
-        result.add(r.h);               
+        result.add(r.h);
 
         System.out.println("[log] Get extended region from region result: " + result);
         return result;
         }
         catch (Exception e) {
             capture();
-            throw new Exception("Error: " + e);    
+            throw new Exception("Error: " + e);
         }
     }
 
-    @RobotKeyword("Get Extended Region From Image" + 
-            "\n Extended the given image creating a new region above, below, on the left or on the right side, with the same height and width" + 
+    @RobotKeyword("Get Extended Region From Image" +
+            "\n Extended the given image creating a new region above, below, on the left or on the right side, with the same height and width" +
             "\n The height and width can change using the multiplier @number_of_times_to_repeat " +
-            "\n If orginal if giver as arguments, the region will be exactly the same location as the image, last argument is ignored " + 
-            "\n Ex: If 2 is given and direction = below the new region will have twice the height of the given image and will be located right below it" + 
+            "\n If orginal if giver as arguments, the region will be exactly the same location as the image, last argument is ignored " +
+            "\n Ex: If 2 is given and direction = below the new region will have twice the height of the given image and will be located right below it" +
             "\n |${region} =    |    Get Extended Region From Image  |  image.png  |    below   |   1   |" +
             "\n |${region} =    |    Get Extended Region From Image  |  image.png  |    original   |   1 #this argument is ignored   |")
 
     @ArgumentNames({"image", "direction", "number of times to repeat"})
     public int[] getExtendedRegionFromImage(String image, String direction, String number_of_times_to_repeat) throws Exception {
             try{
-                int number = Integer.parseInt(number_of_times_to_repeat);	
+                int number = Integer.parseInt(number_of_times_to_repeat);
                 Match match = screen.find(image);
                 Region new_region = new Region(match);
-                                            
+
                 Region r = null;
                 int [] result = new int[4];
-                
+
                 if (direction.equals("below")){
                     r = new_region.below(new_region.h * number);
                 }
@@ -1416,18 +1416,36 @@ public class ScreenKeywords {
                 else{
                     throw new Exception("direction has a invalid value");
                 }
-            
+
             result[0] = r.x;
             result[1] = r.y;
             result[2] = r.w;
-            result[3] = r.h;             
+            result[3] = r.h;
 
             System.out.println("[log] Get extended region from image result: " + result);
             return result;
         }
         catch (FindFailed e) {
             capture();
-            throw new ScreenOperationException("Extended image not found on the screen "+ image +" failed" + e.getMessage(), e);    
-        }      
+            throw new ScreenOperationException("Extended image not found on the screen "+ image +" failed" + e.getMessage(), e);
+        }
+    }
+
+    private static String saveImage(ScreenImage image) {
+        return saveImage(image, null);
+    }
+
+    private static String saveImage(ScreenImage image, String name) {
+        String imagePath;
+        if (name == null || name.equals("")) {
+            imagePath = image.save(CaptureFolder.getInstance().getCaptureFolder());
+        } else {
+            imagePath = image.save(CaptureFolder.getInstance().getCaptureFolder(), name);
+        }
+        System.out.println("*DEBUG* Saved path: " + imagePath);
+        File file = new File(imagePath);
+        String fileName = file.getName();
+        System.out.println("*HTML* <img src='" + CaptureFolder.getInstance().getSubFolder() + "/" + fileName + "'/>");
+        return imagePath;
     }
 }
