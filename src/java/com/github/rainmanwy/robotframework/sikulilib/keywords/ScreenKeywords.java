@@ -160,14 +160,13 @@ public class ScreenKeywords {
             + "\n| Click Text | Hello |")
     @ArgumentNames({"text"})
     public int[] clickText(String text) throws Exception{
-        try {
-            Match match = screen.findText(text);
+        Match match = screen.findLine(text);
+        if (match != null) {
             match.click();
             return regionFromMatch(match);
-        }
-        catch (FindFailed e) {
+        } else {
             capture();
-            throw new ScreenOperationException("Click text '"+ text+"' failed"+e.getMessage(), e);
+            throw new ScreenOperationException("Click text '"+ text+"' failed with findWord method");
         }
     }
 	
@@ -178,14 +177,13 @@ public class ScreenKeywords {
             + "\n| Region Click Text | Hello |")
     @ArgumentNames({"text"})
     public int[] RegionClickText(String text) throws Exception{
-        try {
-            Match match = region.findText(text);
+        Match match = region.findLine(text);
+        if (match != null) {
             match.click();
             return regionFromMatch(match);
-        }
-        catch (FindFailed e) {
+        } else {
             capture();
-            throw new ScreenOperationException("Region Click Text '"+ text+"' failed"+e.getMessage(), e);
+            throw new ScreenOperationException("Region Click Text '"+ text+"' failed with findWord method");
         }
     }
 
